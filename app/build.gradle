@@ -22,7 +22,7 @@ repositories {
 android {
     compileSdkVersion 28
     defaultConfig {
-        applicationId "com.venuenext.vndemo"
+        applicationId "com.venuenext.demo"
         minSdkVersion 21
         targetSdkVersion 28
         versionCode 1
