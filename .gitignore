@@ -45,3 +45,7 @@ proguard/
 
 # Chrome Driver log
 geckodriver.log
+
+app/google-services.json
+intel.jks
+keystore.properties
