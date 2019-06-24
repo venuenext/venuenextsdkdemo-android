@@ -1,4 +1,6 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
+def jsonString = 'sops -d config.json'.execute().text.trim()
+def config = new groovy.json.JsonSlurper().parseText(jsonString)
 
 buildscript {
     ext {
@@ -21,6 +23,15 @@ buildscript {
     }
 }
 allprojects {
+    project.ext {
+        sdk_key = config.sdk_key
+        sdk_secret = config.sdk_secret
+        new_relic_sdk_key = config.new_relic_sdk_key
+        artifactory_user = config.artifactory_user
+        artifactory_password = config.artifactory_password
+        venuenextsdk_user = config.venuenextsdk_user
+        venuenextsdk_password = config.venuenextsdk_password
+    }
     repositories {
         google()
         jcenter()
