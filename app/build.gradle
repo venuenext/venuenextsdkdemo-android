@@ -6,6 +6,7 @@ apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlinx-serialization'
 apply plugin: "androidx.navigation.safeargs"
 apply plugin: 'com.google.gms.google-services'
+apply plugin: 'newrelic'
 
 android {
     compileSdkVersion 28
@@ -14,7 +15,7 @@ android {
         minSdkVersion 21
         targetSdkVersion 28
         versionCode 1
-        versionName "0.1.4"
+        versionName "0.1.5"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     signingConfigs {
@@ -44,6 +45,18 @@ android {
     }
 }
 
+buildscript {
+    ext {
+        new_relic_version = '5.23.0'
+    }
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath "com.newrelic.agent.android:agent-gradle-plugin:${new_relic_version}"
+    }
+}
+
 repositories {
     jcenter()
 
@@ -60,13 +73,13 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
     //venuenext
-    implementation 'com.venuenext:vncore:0.1.4'
-    implementation 'com.venuenext:vncoreui:0.1.4'
-    implementation 'com.venuenext:vnanalytics:0.1.4'
-    implementation 'com.venuenext:vnlegacy:0.1.4'
-    implementation 'com.venuenext:vnorder:0.1.4'
-    implementation 'com.venuenext:vnorderui:0.1.4'
-    implementation 'com.venuenext:vnpayment:0.1.4'
+    implementation 'com.venuenext:vncore:0.1.5'
+    implementation 'com.venuenext:vncoreui:0.1.5'
+    implementation 'com.venuenext:vnanalytics:0.1.5'
+    implementation 'com.venuenext:vnlegacy:0.1.5'
+    implementation 'com.venuenext:vnorder:0.1.5'
+    implementation 'com.venuenext:vnorderui:0.1.5'
+    implementation 'com.venuenext:vnpayment:0.1.5'
     //kotlin
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
     implementation "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
@@ -92,11 +105,13 @@ dependencies {
     implementation 'com.google.firebase:firebase-core:16.0.8'
     implementation 'com.google.firebase:firebase-messaging:17.6.0'
     implementation 'com.google.android.gms:play-services-tagmanager:16.0.8'
-    // braintree
+    //braintree
     implementation 'com.braintreepayments.api:braintree:3.0.0'
     implementation 'com.braintreepayments.api:drop-in:4.1.0'
     //facebook
     implementation 'com.facebook.shimmer:shimmer:0.4.0'
+    //new relic
+    api "com.newrelic.agent.android:android-agent:$new_relic_version"
 
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test:runner:1.1.1'
