@@ -8,8 +8,8 @@
           android:title="My Orders"/>
     <!--item android:id="@+id/navigation_inbox"
           android:icon="@drawable/ic_icon_inbox"
-          android:title="Inbox"/>
+          android:title="Inbox"/-->
     <item android:id="@+id/navigation_settings"
           android:icon="@drawable/ic_icon_settings"
-          android:title="Settings"/-->
+          android:title="Settings"/>
 </menu>

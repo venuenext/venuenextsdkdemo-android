@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import androidx.navigation.NavOptions
-import androidx.navigation.NavOptionsBuilder
 import androidx.navigation.Navigation
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.iid.FirebaseInstanceId
@@ -13,7 +12,9 @@ import com.venuenext.vnanalytics.firebase.FirebaseAnalytics
 import com.venuenext.vncore.OrderNotificationListener
 import com.venuenext.vncore.VenueNext
 import com.venuenext.vnorder.VenueNextOrders
+import com.venuenext.vnorder.orders.model.PaymentProcessableFragment
 import com.venuenext.vnorderui.orders.MyOrdersFragment
+import com.venuenext.vnorderui.orders.OrderSummaryFragment
 import com.venuenext.vnorderui.stands.StandMenuFragment
 import com.venuenext.vnorderui.stands.StandsFragment
 import com.venuenext.vnorderui.ui.OrderCancelDialogFragment
@@ -45,20 +46,21 @@ class MainActivity : AppCompatActivity(), OrderNotificationListener {
             when (menuItem.itemId) {
                 R.id.navigation_menus -> {
 
-                    if (!VenueNextOrders.currentCart?.cartEntries.isNullOrEmpty()) {
-                        val navHostFragment = supportFragmentManager.findFragmentById(R.id.fragment_main)
-                        val currentHostedFragment = navHostFragment?.childFragmentManager?.fragments?.get(0)
+                    VenueNextOrders.orderUUID = null
+                    val navHostFragment = supportFragmentManager.findFragmentById(R.id.fragment_main)
+                    val currentHostedFragment = navHostFragment?.childFragmentManager?.fragments?.get(0)
 
+                    if (!VenueNextOrders.currentCart?.cartEntries.isNullOrEmpty()) {
                         if (currentHostedFragment != null && currentHostedFragment is StandMenuFragment) {
                             val orderCancelFragment = OrderCancelDialogFragment()
                             orderCancelFragment.show(navHostFragment.childFragmentManager, orderCancelFragment.tag)
+                        } else if (currentHostedFragment!= null && (currentHostedFragment is OrderSummaryFragment || currentHostedFragment is PaymentProcessableFragment)){
+                            VenueNextOrders.currentCart = null
+                            Navigation.findNavController(view).navigate(com.venuenext.vnorderui.R.id.standsFragment, null, navOptions)
                         } else {
                             Navigation.findNavController(view).navigate(com.venuenext.vnorderui.R.id.standMenuFragment, null, navOptions)
                         }
                     } else {
-                        val navHostFragment = supportFragmentManager.findFragmentById(R.id.fragment_main)
-                        val currentHostedFragment = navHostFragment?.childFragmentManager?.fragments?.get(0)
-
                         if (currentHostedFragment != null && currentHostedFragment !is StandsFragment) {
                             Navigation.findNavController(view).navigate(com.venuenext.vnorderui.R.id.standsFragment, null, navOptions)
                         } else {
@@ -83,11 +85,11 @@ class MainActivity : AppCompatActivity(), OrderNotificationListener {
                 /* R.id.navigation_inbox -> {
                     Navigation.findNavController(view).navigate(com.venuenext.vnorderui.R.id.inboxFragment)
                     return@setOnNavigationItemSelectedListener true
-                }
+                } */
                 R.id.navigation_settings -> {
                     Navigation.findNavController(view).navigate(com.venuenext.vnorderui.R.id.settingsFragment)
                     return@setOnNavigationItemSelectedListener true
-                } */
+                }
             }
             false
         }
@@ -118,6 +120,7 @@ class MainActivity : AppCompatActivity(), OrderNotificationListener {
         super.onResume()
 
         VenueNext.subscribeOrderNotification(this)
+        VenueNext.checkIsConnected(this)
     }
 
     override fun onPause() {
