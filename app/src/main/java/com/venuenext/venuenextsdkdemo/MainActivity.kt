@@ -96,20 +96,14 @@ class MainActivity : AppCompatActivity(), OrderNotificationListener {
 
         GlobalScope.async {
             try {
-                val newRelicSdkKey = BuildConfig.newRelicSdkKey
-                val sdkKey = BuildConfig.sdkKey
-                val sdkSecret = BuildConfig.sdkSecret
-
                 VenueNext.notificationTitle = "Intel Demo"
                 VenueNext.notificationSmallIcon = R.mipmap.ic_launcher
                 VenueNext.notificationLargeIcon = R.mipmap.ic_launcher
 
-                VenueNext.newRelicSdkKey = newRelicSdkKey
-
                 VenueNext.configureAnalytics(FirebaseAnalytics(this@MainActivity))
                 VenueNextOrders.configurePaymentProcessing(BraintreePaymentProcessableFragment(), true)
 
-                VenueNext.initialize(sdkKey, sdkSecret, this@MainActivity).await()
+                VenueNext.initialize("[SDK_KEY_GOES_HERE]", "[SDK_SECRET_GOES_HERE]", this@MainActivity).await()
             } catch (e: Exception) {
                 withContext(Dispatchers.Main) {
                     completeInitialize()

@@ -37,16 +37,7 @@ android {
         release {
             signingConfig signingConfigs.release
             minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-
-            buildConfigField "String", "sdkKey", "\"${sdk_key}\""
-            buildConfigField "String", "sdkSecret", "\"${sdk_secret}\""
-            buildConfigField "String", "newRelicSdkKey", "\"${new_relic_sdk_key}\""
-        }
-        debug {
-            buildConfigField "String", "sdkKey", "\"${sdk_key}\""
-            buildConfigField "String", "sdkSecret", "\"${sdk_secret}\""
-            buildConfigField "String", "newRelicSdkKey", "\"${new_relic_sdk_key}\""
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
     dataBinding {
