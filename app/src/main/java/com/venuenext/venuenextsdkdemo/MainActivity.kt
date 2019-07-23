@@ -100,6 +100,8 @@ class MainActivity : AppCompatActivity(), OrderNotificationListener {
                 VenueNext.notificationSmallIcon = R.mipmap.ic_launcher
                 VenueNext.notificationLargeIcon = R.mipmap.ic_launcher
 
+                VenueNext.newRelicSdkKey = "[API_KEY_GOES_HERE]"
+
                 VenueNext.configureAnalytics(FirebaseAnalytics(this@MainActivity))
                 VenueNextOrders.configurePaymentProcessing(BraintreePaymentProcessableFragment(), true)
 
@@ -143,6 +145,10 @@ class MainActivity : AppCompatActivity(), OrderNotificationListener {
         registerFCM()
 
         bottomNavigationView.visibility = View.VISIBLE
+
+        // Use bundle to provide product type filter for stands
+        //val bundle = bundleOf("productType" to ProductType.FOOD.value)
+        //Navigation.findNavController(view).navigate(R.id.action_main_to_stands, bundle)
 
         Navigation.findNavController(view).navigate(R.id.action_main_to_stands)
     }
