@@ -13,11 +13,11 @@ import com.venuenext.vncore.OrderNotificationListener
 import com.venuenext.vncore.VenueNext
 import com.venuenext.vnorder.VenueNextOrders
 import com.venuenext.vnorder.orders.model.PaymentProcessableFragment
-import com.venuenext.vnorderui.orders.MyOrdersFragment
+import com.venuenext.vnorderui.myorders.MyOrdersFragment
 import com.venuenext.vnorderui.orders.OrderSummaryFragment
-import com.venuenext.vnorderui.stands.StandMenuFragment
+import com.venuenext.vnorderui.stands.MenuFragment
 import com.venuenext.vnorderui.stands.StandsFragment
-import com.venuenext.vnorderui.ui.OrderCancelDialogFragment
+import com.venuenext.vnorderui.orders.OrderCancelDialogFragment
 import com.venuenext.vnpayment.braintree.ui.BraintreePaymentProcessableFragment
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.Dispatchers
@@ -51,14 +51,14 @@ class MainActivity : AppCompatActivity(), OrderNotificationListener {
                     val currentHostedFragment = navHostFragment?.childFragmentManager?.fragments?.get(0)
 
                     if (!VenueNextOrders.currentCart?.cartEntries.isNullOrEmpty()) {
-                        if (currentHostedFragment != null && currentHostedFragment is StandMenuFragment) {
+                        if (currentHostedFragment != null && currentHostedFragment is MenuFragment) {
                             val orderCancelFragment = OrderCancelDialogFragment()
                             orderCancelFragment.show(navHostFragment.childFragmentManager, orderCancelFragment.tag)
                         } else if (currentHostedFragment!= null && (currentHostedFragment is OrderSummaryFragment || currentHostedFragment is PaymentProcessableFragment)){
                             VenueNextOrders.currentCart = null
                             Navigation.findNavController(view).navigate(com.venuenext.vnorderui.R.id.standsFragment, null, navOptions)
                         } else {
-                            Navigation.findNavController(view).navigate(com.venuenext.vnorderui.R.id.standMenuFragment, null, navOptions)
+                            Navigation.findNavController(view).navigate(com.venuenext.vnorderui.R.id.menuFragment, null, navOptions)
                         }
                     } else {
                         if (currentHostedFragment != null && currentHostedFragment !is StandsFragment) {
