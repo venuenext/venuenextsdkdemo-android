@@ -1,5 +1,6 @@
 package com.venuenext.venuenextsdkdemo
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -19,6 +20,7 @@ import com.venuenext.vnorderui.stands.MenuFragment
 import com.venuenext.vnorderui.stands.StandsFragment
 import com.venuenext.vnorderui.orders.OrderCancelDialogFragment
 import com.venuenext.vnpayment.braintree.ui.BraintreePaymentProcessableFragment
+import com.venuenext.vnlocalytics.localytics.LocalyticsAnalytics
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -103,6 +105,7 @@ class MainActivity : AppCompatActivity(), OrderNotificationListener {
                 VenueNext.newRelicSdkKey = "[API_KEY_GOES_HERE]"
 
                 VenueNext.configureAnalytics(FirebaseAnalytics(this@MainActivity))
+                VenueNext.configureAnalytics(LocalyticsAnalytics(this@MainActivity, application!!))
                 VenueNextOrders.configurePaymentProcessing(BraintreePaymentProcessableFragment(), true)
 
                 VenueNext.initialize("[SDK_KEY_GOES_HERE]", "[SDK_SECRET_GOES_HERE]", this@MainActivity).await()
@@ -129,6 +132,15 @@ class MainActivity : AppCompatActivity(), OrderNotificationListener {
         super.onPause()
 
         VenueNext.unsubscribeOrderNotification(this)
+    }
+
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+
+        val localyticsInterface = VenueNext.getLocalyticsInterface()
+        localyticsInterface.let {
+            it?.handlePushNotificationIntent(this, intent)
+        }
     }
 
     override fun onOrderNotification(orderUUID: String?) {

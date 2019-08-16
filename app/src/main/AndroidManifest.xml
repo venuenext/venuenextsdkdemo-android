@@ -15,6 +15,12 @@
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
+            <intent-filter>
+                <data android:scheme="ampLOCALYTICS_APIKEY_GOES_HERE" />
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+            </intent-filter>
         </activity>
         <service android:name="com.venuenext.venuenextsdkdemo.FCMService">
             <intent-filter>
@@ -31,6 +37,9 @@
                     android:name="com.google.firebase.messaging.default_notification_color"
                     android:resource="@color/colorAccent" />
         </service>
+        <meta-data
+                android:name="com.google.android.gms.ads.APPLICATION_ID"
+                android:value="ca-app-pub-ADS_APIKEY_GOES_HERE"/>
     </application>
 
 </manifest>
