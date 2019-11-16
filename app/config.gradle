@@ -1,0 +1,10 @@
+apply plugin: 'maven-publish'
+repositories {
+    maven {
+        url "https://venuenext.jfrog.io/venuenext/venuenextsdk-android"
+        credentials {
+            username = 'YOUR_USERNAME'
+            password = 'YOUR_PASSWORD'
+        }
+    }
+}
