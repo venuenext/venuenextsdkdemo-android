@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- VenueNext SDK Configuration -->
+
+    <!-- Config -->
+    <string name="localytics_key">LOCALYTICS_APIKEY_GOES_HERE</string>
+    <string name="gms_ads_key">APIKEY_GOES_HERE</string>
+
+    <!-- Food & Beverage -->
+    <string name="food_and_bev_rvc_title">Menus</string>
+
+    <!-- Merchandise -->
+    <string name="merchandise_rvc_title">Gear</string>
+
+    <!-- Marketplace Experiences -->
+    <string name="marketplace_experiences_rvc_title">Experiences</string>
+
+    <!-- Order History -->
+    <string name="order_history_title">My Orders</string>
+
+    <!-- Wallet -->
+    <string name="wallet_title">Wallet</string>
+    <string name="virtual_currency_name">VN Bucks</string>
+
+</resources>

@@ -1,19 +1,73 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
-            xmlns:app="http://schemas.android.com/apk/res-auto"
-            xmlns:tools="http://schemas.android.com/tools"
-            android:id="@+id/app_navigation"
-            app:startDestination="@id/mainFragment">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/app_navigation"
+    app:startDestination="@id/food_bev_flow">
 
-    <include app:graph="@navigation/order_navigation" />
+    <!-- Action reference graphs -->
+    <!-- This defines all of the top level navigation actions -->
+    <include app:graph="@navigation/vnorderui_graph"/>
 
-    <fragment
-            android:id="@+id/mainFragment"
-            android:name="com.venuenext.venuenextsdkdemo.MainFragment"
-            tools:layout="@layout/fragment_main">
-        <action
-                android:id="@+id/action_main_to_stands"
-                app:destination="@id/order_navigation" />
-    </fragment>
+    <!-- VenueNext Flows-->
+    <include app:graph="@navigation/all_stands_flow"/>
+    <include app:graph="@navigation/food_bev_flow"/>
+    <include app:graph="@navigation/experience_flow"/>
+    <include app:graph="@navigation/merchandise_flow"/>
+    <include app:graph="@navigation/to_stand_menu_flow"/>
+    <include app:graph="@navigation/to_experience_menu_flow"/>
+    <include app:graph="@navigation/my_orders_flow"/>
+    <include app:graph="@navigation/wallet_flow"/>
+
+    <!--Flow Actions-->
+    <!-- Show All Stands -->
+    <action android:id="@id/action_all_stands_flow" app:destination="@id/all_stands_flow">
+        <argument android:name="showBackButton" app:argType="boolean" android:defaultValue="true"/>
+    </action>
+
+    <!-- Show Food & Beverage Stands -->
+    <action android:id="@id/action_to_food_bev_flow" app:destination="@id/food_bev_flow">
+        <argument android:name="showBackButton" app:argType="boolean" android:defaultValue="true"/>
+        <argument android:name="productType" app:argType="string" android:defaultValue="Food"/>
+        <argument android:name="vnActionBarTitle" app:argType="string" android:defaultValue="@string/food_and_bev_rvc_title"/>
+    </action>
+
+    <!-- Show Experience Stands -->
+    <action android:id="@id/action_to_experience_flow" app:destination="@id/experience_flow">
+        <argument android:name="showBackButton" app:argType="boolean" android:defaultValue="true"/>
+        <argument android:name="productType" app:argType="string" android:defaultValue="Experience"/>
+        <argument android:name="vnActionBarTitle" app:argType="string" android:defaultValue="@string/marketplace_experiences_rvc_title"/>
+    </action>
+
+    <!-- Show Merchandise Stands -->
+    <action android:id="@id/action_to_merchandise_flow" app:destination="@id/merchandise_flow">
+        <argument android:name="showBackButton" app:argType="boolean" android:defaultValue="true"/>
+        <argument android:name="productType" app:argType="string" android:defaultValue="Merchandise"/>
+        <argument android:name="vnActionBarTitle" app:argType="string" android:defaultValue="@string/merchandise_rvc_title"/>
+    </action>
+
+    <!-- Show Food and Beverage/Merchandise Menus -->
+    <action android:id="@id/action_start_to_stand_menu" app:destination="@id/to_stand_menu_flow">
+        <argument android:name="showBackButton" app:argType="boolean" android:defaultValue="true"/>
+        <argument android:name="toMenuId" app:argType="string" app:nullable="true" android:defaultValue="@null"/>
+    </action>
+
+    <!-- Show Experience Menus -->
+    <action android:id="@id/action_start_to_experience_menu" app:destination="@id/to_experience_menu_flow">
+        <argument android:name="showBackButton" app:argType="boolean" android:defaultValue="true"/>
+        <argument android:name="toMenuId" app:argType="string" app:nullable="true" android:defaultValue="@null"/>
+    </action>
+
+    <!-- Show My Order History -->
+    <action android:id="@id/action_to_my_orders_flow" app:destination="@id/my_orders_flow">
+        <argument android:name="showBackButton" app:argType="boolean" android:defaultValue="true"/>
+        <argument android:name="vnActionBarTitle" app:argType="string" android:defaultValue="@string/order_history_title"/>
+    </action>
+
+    <!-- Show Wallet -->
+    <action android:id="@id/action_to_wallet_flow" app:destination="@id/wallet_flow">
+        <argument android:name="showBackButton" app:argType="boolean" android:defaultValue="true"/>
+        <argument android:name="vnActionBarTitle" app:argType="string" android:defaultValue="@string/wallet_title"/>
+    </action>
 
 </navigation>
