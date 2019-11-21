@@ -3,8 +3,13 @@
     <!-- VenueNext SDK Configuration -->
 
     <!-- Config -->
-    <string name="localytics_key">LOCALYTICS_APIKEY_GOES_HERE</string>
-    <string name="gms_ads_key">APIKEY_GOES_HERE</string>
+    <string name="vn_sdk_key">KEY</string>
+    <string name="vn_sdk_secret">SECRET</string>
+    <string name="localytics_key">LOCALYTICS_KEY</string>
+    <string name="gms_ads_key">GMS_ADS_KEY</string>
+
+    <!-- Deep Linking -->
+    <string name="vn_deep_link_scheme">YOUR_APP_SCHEME</string>
 
     <!-- Food & Beverage -->
     <string name="food_and_bev_rvc_title">Menus</string>
@@ -13,10 +18,10 @@
     <string name="merchandise_rvc_title">Gear</string>
 
     <!-- Marketplace Experiences -->
-    <string name="marketplace_experiences_rvc_title">Experiences</string>
+    <string name="marketplace_experiences_rvc_title">Market</string>
 
     <!-- Order History -->
-    <string name="order_history_title">My Orders</string>
+    <string name="order_history_title">Orders</string>
 
     <!-- Wallet -->
     <string name="wallet_title">Wallet</string>

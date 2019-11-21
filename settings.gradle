@@ -1,1 +1,1 @@
-include ':app'
+include ':app', ':PresenceSDK-prod-release-1.18.3.0'

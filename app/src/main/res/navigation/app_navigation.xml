@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/app_navigation"
-    app:startDestination="@id/food_bev_flow">
+    app:startDestination="@id/mainFragment">
 
     <!-- Action reference graphs -->
     <!-- This defines all of the top level navigation actions -->
@@ -29,21 +29,21 @@
     <action android:id="@id/action_to_food_bev_flow" app:destination="@id/food_bev_flow">
         <argument android:name="showBackButton" app:argType="boolean" android:defaultValue="true"/>
         <argument android:name="productType" app:argType="string" android:defaultValue="Food"/>
-        <argument android:name="vnActionBarTitle" app:argType="string" android:defaultValue="@string/food_and_bev_rvc_title"/>
+        <argument android:name="vnActionBarTitle" app:argType="reference" android:defaultValue="@string/food_and_bev_rvc_title"/>
     </action>
 
     <!-- Show Experience Stands -->
     <action android:id="@id/action_to_experience_flow" app:destination="@id/experience_flow">
         <argument android:name="showBackButton" app:argType="boolean" android:defaultValue="true"/>
         <argument android:name="productType" app:argType="string" android:defaultValue="Experience"/>
-        <argument android:name="vnActionBarTitle" app:argType="string" android:defaultValue="@string/marketplace_experiences_rvc_title"/>
+        <argument android:name="vnActionBarTitle" app:argType="reference" android:defaultValue="@string/marketplace_experiences_rvc_title"/>
     </action>
 
     <!-- Show Merchandise Stands -->
     <action android:id="@id/action_to_merchandise_flow" app:destination="@id/merchandise_flow">
         <argument android:name="showBackButton" app:argType="boolean" android:defaultValue="true"/>
         <argument android:name="productType" app:argType="string" android:defaultValue="Merchandise"/>
-        <argument android:name="vnActionBarTitle" app:argType="string" android:defaultValue="@string/merchandise_rvc_title"/>
+        <argument android:name="vnActionBarTitle" app:argType="reference" android:defaultValue="@string/merchandise_rvc_title"/>
     </action>
 
     <!-- Show Food and Beverage/Merchandise Menus -->
@@ -61,13 +61,36 @@
     <!-- Show My Order History -->
     <action android:id="@id/action_to_my_orders_flow" app:destination="@id/my_orders_flow">
         <argument android:name="showBackButton" app:argType="boolean" android:defaultValue="true"/>
-        <argument android:name="vnActionBarTitle" app:argType="string" android:defaultValue="@string/order_history_title"/>
+        <argument android:name="vnActionBarTitle" app:argType="reference" android:defaultValue="@string/order_history_title"/>
     </action>
 
     <!-- Show Wallet -->
     <action android:id="@id/action_to_wallet_flow" app:destination="@id/wallet_flow">
         <argument android:name="showBackButton" app:argType="boolean" android:defaultValue="true"/>
-        <argument android:name="vnActionBarTitle" app:argType="string" android:defaultValue="@string/wallet_title"/>
+        <argument android:name="vnActionBarTitle" app:argType="reference" android:defaultValue="@string/wallet_title"/>
     </action>
+
+    <!-- This is the entry point into the app's navigation graph. Here we define an action that
+         launches the VN flow and pop this placeholder fragment so it isn't shown again.
+         Note: the app's destination cannot be another action!
+     -->
+    <fragment
+        android:id="@+id/mainFragment"
+        android:name="com.venuenext.venuenextsdkdemo.MainFragment"
+        tools:layout="@layout/fragment_main">
+
+        <action
+            android:id="@+id/start_main"
+            app:destination="@id/food_bev_flow"
+            app:popUpTo="@id/mainFragment"
+            app:popUpToInclusive="true" />
+
+    </fragment>
+
+    <!-- Add your UI components here -->
+
+    <!-- Ticketing Navigation -->
+    <include app:graph="@navigation/ticketing_navigation"/>
+    <action android:id="@+id/action_to_ticketing_flow" app:destination="@id/ticketing_navigation" />
 
 </navigation>

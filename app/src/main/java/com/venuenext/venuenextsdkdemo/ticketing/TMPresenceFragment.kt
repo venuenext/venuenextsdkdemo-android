@@ -1,0 +1,186 @@
+package com.venuenext.venuenextsdkdemo.ticketing
+
+import android.app.Application
+import android.os.Bundle
+import android.util.Log
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.isVisible
+import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
+import com.google.android.material.snackbar.Snackbar
+import com.ticketmaster.presencesdk.PresenceSDK
+import com.ticketmaster.presencesdk.login.PresenceLoginListener
+import com.ticketmaster.presencesdk.login.TMLoginApi
+import com.ticketmaster.presencesdk.login.UserInfoManager
+import com.venuenext.venuenextsdkdemo.R
+import com.venuenext.venuenextsdkdemo.databinding.FragmentPresenceBinding
+import com.venuenext.vncoreui.LifecycleCoroutineScope
+import com.venuenext.vnticket.VNTicket
+import com.venuenext.vnticket.model.TicketingLoginData
+import com.venuenext.vnticket.protocol.LoginResultListener
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+
+private const val TAG = "TMPresenceFragment"
+
+// This sample is used to demonstrate logging into the VenueNext Wallet from Ticketmaster. This is
+// is not intended to utilize TM functionality.
+class TMPresenceFragment : Fragment(), PresenceLoginListener,
+    PresenceSDK.MemberInfoCompletionCallback, View.OnClickListener, LoginResultListener {
+
+    private lateinit var binding: FragmentPresenceBinding
+    private var ticketmasterConfigListener: TicketmasterConfigListener? = null
+
+    private val coroutineScope = LifecycleCoroutineScope(this)
+    private val presenceSDK by lazy { PresenceSDK.getPresenceSDK(application) }
+    private val application by lazy { context?.applicationContext as Application }
+
+    private var memberInfoDidLoad = false
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+
+        binding = FragmentPresenceBinding.inflate(inflater)
+        binding.contentPresenceBackImageview.setOnClickListener(this)
+        binding.contentPresenceLogoutButton.setOnClickListener(this)
+        binding.contentPresenceLogoutButton.isVisible = presenceSDK.isLoggedIn
+
+        ticketmasterConfigListener =
+            TicketmasterConfigListener(presenceSDK, ::shouldLaunchPresenceSDK)
+        ticketmasterConfigListener?.configurePresenceSDK()
+
+        return binding.root
+    }
+
+    override fun onClick(v: View?) {
+        when (v?.id) {
+            binding.contentPresenceBackImageview.id -> findNavController().navigateUp()
+            binding.contentPresenceLogoutButton.id -> presenceSDK.logOut()
+        }
+    }
+
+    // Note: This is called from a background thread
+    override fun onLoginSuccessful(p0: TMLoginApi.BackendName?, p1: String?) {
+        coroutineScope.launch(Dispatchers.Main) {
+            presenceSDK.getMemberInfo(p0, this@TMPresenceFragment)
+            binding.contentPresenceLogoutButton.isVisible = true
+        }
+    }
+
+    override fun onLogoutAllSuccessful() {
+        binding.contentPresenceLogoutButton.isVisible = true
+        VNTicket.logout(::vnSdkLogoutSuccess, ::vnSdkLogoutFailure)
+    }
+
+    private fun shouldLaunchPresenceSDK(shouldLaunch: Boolean) {
+        if (activity == null) return
+
+        if (shouldLaunch) {
+            presenceSDK.start(activity as AppCompatActivity, R.id.fragment_presence_container, this)
+        } else {
+            // Configuration failed
+            Snackbar.make(binding.root, getText(R.string.tm_config_failure), Snackbar.LENGTH_LONG)
+                .show()
+        }
+    }
+
+    // Note: This is a callback from a background thread
+    private fun vnSdkLogoutSuccess() {
+        // Hide UI, back press, etc
+        coroutineScope.launch(Dispatchers.Main) {
+            Log.i(TAG, "VenueNext logout success")
+            presenceSDK.stop()
+            findNavController().navigateUp()
+        }
+    }
+
+    // Note: This is a callback from a background thread
+    private fun vnSdkLogoutFailure(exception: Exception) {
+        coroutineScope.launch(Dispatchers.Main) {
+            // Hide UI, back press, etc
+            Log.e(TAG, "Logout failed", exception)
+            Snackbar.make(binding.root, getText(R.string.sdk_logout_failure), Snackbar.LENGTH_LONG)
+                .show()
+        }
+    }
+
+    override fun onMemberInfoLoaded(info: UserInfoManager.MemberInfo?, p1: String?) {
+
+        memberInfoDidLoad = true
+
+        info?.let {
+
+            val memberId = it.memberId
+            val email = it.email
+            val firstName = it.firstName
+            val lastName = it.lastName
+            val displayAccountId = null
+
+            // Register the login listener
+            VNTicket.registerLoginResultListener(this)
+
+            val ticketingLoginData =
+                TicketingLoginData(email, memberId, firstName, lastName, displayAccountId)
+
+            // Kick off the (asynchronous) SDK login handler
+            VNTicket.onLoginSuccess(ticketingLoginData)
+
+            // We recommend showing a progress bar or other loading UI here
+            binding.fragmentPresenceContainer.isVisible = false
+            binding.progressBar.isVisible = true
+
+        }
+    }
+
+    // Called asynchronously. Ticketing data can be safely ignored
+    override fun onLoginSuccess(ticketingLoginData: TicketingLoginData) {
+        VNTicket.unregisterLoginResultListener(this)
+
+        // Wallet is ready to be shown!
+
+        // This demo app does not support full TM functionality, so we are popping this fragment
+        findNavController().navigateUp()
+        findNavController().navigate(R.id.action_to_wallet_flow)
+    }
+
+    // Unhide loading UI and show an error here
+    override fun onLoginFailure() {
+        activity?.let {
+            binding.progressBar.isVisible = false
+
+            Snackbar.make(binding.root, getText(R.string.sdk_login_failure), Snackbar.LENGTH_LONG)
+                .show()
+
+            findNavController().navigateUp()
+        }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+
+        if (!memberInfoDidLoad) {
+            VNTicket.onLoginFailure()
+        }
+
+        ticketmasterConfigListener = null
+    }
+
+    // Unused for this example
+    override fun onLoginMethodUsed(p0: TMLoginApi.BackendName?, p1: TMLoginApi.LoginMethod?) {}
+    override fun onLoginWindowDidDisplay(p0: TMLoginApi.BackendName?) {}
+    override fun onLoginForgotPasswordClicked(p0: TMLoginApi.BackendName?) {}
+    override fun onLoginFailed(p0: TMLoginApi.BackendName?, p1: String?) {}
+    override fun onRefreshTokenFailed(p0: TMLoginApi.BackendName?) {}
+    override fun onCacheCleared() {}
+    override fun onLoginCancelled(p0: TMLoginApi.BackendName?) {}
+    override fun onLogoutSuccessful(p0: TMLoginApi.BackendName?) {}
+    override fun onMemberUpdated(p0: TMLoginApi.BackendName?, p1: UserInfoManager.MemberInfo?) {}
+    override fun onTokenRefreshed(p0: TMLoginApi.BackendName?, p1: String?) {}
+
+}

@@ -1,15 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:id="@+id/navigation_menus"
-          android:icon="@drawable/ic_icon_menus"
-          android:title="Menus"/>
-    <item android:id="@+id/navigation_myorders"
-          android:icon="@drawable/ic_icon_myorders"
-          android:title="My Orders"/>
-    <!--item android:id="@+id/navigation_inbox"
-          android:icon="@drawable/ic_icon_inbox"
-          android:title="Inbox"/-->
-    <item android:id="@+id/navigation_settings"
-          android:icon="@drawable/ic_icon_settings"
-          android:title="Settings"/>
+    <item
+        android:id="@+id/navigation_food_and_bev_rvc"
+        android:icon="@drawable/ic_food_and_bev"
+        android:title="@string/nav_food_and_bev_rvc_title" />
+
+    <!-- Merchandise flow is not currently supported in the SDK -->
+<!--    <item-->
+<!--        android:id="@+id/navigation_merchandise_rvc"-->
+<!--        android:icon="@drawable/ic_icon_merchandise"-->
+<!--        android:title="@string/nav_merchandise_rvc_title" />-->
+    <item
+        android:id="@+id/navigation_marketplace_rvc"
+        android:icon="@drawable/ic_marketplace_experience"
+        android:title="@string/nav_marketplace_experiences_rvc_title" />
+    <item
+        android:id="@+id/navigation_order_history"
+        android:icon="@drawable/ic_order_history"
+        android:title="@string/nav_order_history_title" />
+    <item
+        android:id="@+id/navigation_wallet"
+        android:icon="@drawable/ic_wallet"
+        android:title="@string/nav_wallet_title" />
+    <item
+        android:id="@+id/navigation_more"
+        android:icon="@drawable/ic_more_horiz"
+        android:title="@string/nav_more_title" />
 </menu>

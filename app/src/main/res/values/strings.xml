@@ -1,4 +1,23 @@
 <resources>
-    <string name="app_name">VNDemo</string>
-    <string name="app_version">0.1.4</string>
+    <string name="app_name">VenueNext Demo</string>
+    <string name="app_version">0.5.0</string>
+
+    <!-- Navigation Titles -->
+    <string name="nav_food_and_bev_rvc_title">Menus</string>
+    <string name="nav_merchandise_rvc_title">Gear</string>
+    <string name="nav_marketplace_experiences_rvc_title">Market</string>
+    <string name="nav_order_history_title">Orders</string>
+    <string name="nav_wallet_title">Wallet</string>
+    <string name="nav_more_title">More</string>
+
+    <!-- Settings -->
+    <string name="nav_more_message">Coming soon!</string>
+
+    <!-- Ticketmaster -->
+    <string name="logout">Logout</string>
+    <string name="tickets">Tickets</string>
+    <string name="tm_config_failure">Ticketmaster is unavailable, please try again later</string>
+    <string name="sdk_login_failure">Failed to login. Please try again later</string>
+    <string name="sdk_logout_failure">Failed to logout. Please try again later</string>
+
 </resources>

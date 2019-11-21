@@ -1,168 +1,172 @@
 package com.venuenext.venuenextsdkdemo
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.MenuItem
 import android.view.View
-import androidx.navigation.NavOptions
+import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.Navigation
 import com.google.android.gms.tasks.OnCompleteListener
+import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.iid.FirebaseInstanceId
+import com.ticketmaster.presencesdk.PresenceSDK
 import com.venuenext.vnanalytics.firebase.FirebaseAnalytics
-import com.venuenext.vncore.OrderNotificationListener
 import com.venuenext.vncore.VenueNext
-import com.venuenext.vnorder.VenueNextOrders
-import com.venuenext.vnorder.orders.model.PaymentProcessableFragment
-import com.venuenext.vnorderui.myorders.MyOrdersFragment
-import com.venuenext.vnorderui.orders.OrderSummaryFragment
-import com.venuenext.vnorderui.stands.MenuFragment
-import com.venuenext.vnorderui.stands.StandsFragment
-import com.venuenext.vnorderui.orders.OrderCancelDialogFragment
-import com.venuenext.vnpayment.braintree.ui.BraintreePaymentProcessableFragment
+import com.venuenext.vncore.protocol.TicketingInterface
+import com.venuenext.vncore.protocol.WalletInterface
+import com.venuenext.vncoreui.LifecycleCoroutineScope
 import com.venuenext.vnlocalytics.localytics.LocalyticsAnalytics
-import kotlinx.android.synthetic.main.activity_main.*
+import com.venuenext.vnorderui.VNOrderUI
+import com.venuenext.vnpayment.VNPayment
+import com.venuenext.vnpayment.braintree.ui.BraintreePaymentProcessableFragment
+import com.venuenext.vnwalletui.QrConfig
+import com.venuenext.vnwalletui.VNWalletUI
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import java.lang.Exception
 
-class MainActivity : AppCompatActivity(), OrderNotificationListener {
+private const val TAG = "MainActivity"
 
-    lateinit var view: View
+class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemSelectedListener,
+    TicketingInterface,
+    WalletInterface {
 
-    val TAG = "MainActivity"
+    private lateinit var view: View
+    private lateinit var bottomNavigationView: BottomNavigationView
+
+    private val coroutineScope = LifecycleCoroutineScope(this)
+
+    private val presenceSDK: PresenceSDK by lazy { PresenceSDK.getPresenceSDK(application) }
+    private val navController by lazy { Navigation.findNavController(view) }
+    override val virtualCurrencyName by lazy { getString(R.string.virtual_currency_name) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         setContentView(R.layout.activity_main)
+        view = findViewById(R.id.fragment_main)
 
-        view = findViewById<View>(R.id.fragment_main)
+        bottomNavigationView = findViewById(R.id.bottomNavigationView)
+        bottomNavigationView.setOnNavigationItemSelectedListener(this)
 
-        bottomNavigationView.setOnNavigationItemSelectedListener { menuItem ->
+        // Setting a reselected listener will disallow selection of the same tab
+//        bottomNavigationView.setOnNavigationItemReselectedListener { /* Disallow reselection */ }
 
-            val navOptions = NavOptions.Builder().setLaunchSingleTop(true).build()
-
-            when (menuItem.itemId) {
-                R.id.navigation_menus -> {
-
-                    VenueNextOrders.orderUUID = null
-                    val navHostFragment = supportFragmentManager.findFragmentById(R.id.fragment_main)
-                    val currentHostedFragment = navHostFragment?.childFragmentManager?.fragments?.get(0)
-
-                    if (!VenueNextOrders.currentCart?.cartEntries.isNullOrEmpty()) {
-                        if (currentHostedFragment != null && currentHostedFragment is MenuFragment) {
-                            val orderCancelFragment = OrderCancelDialogFragment()
-                            orderCancelFragment.show(navHostFragment.childFragmentManager, orderCancelFragment.tag)
-                        } else if (currentHostedFragment!= null && (currentHostedFragment is OrderSummaryFragment || currentHostedFragment is PaymentProcessableFragment)){
-                            VenueNextOrders.currentCart = null
-                            Navigation.findNavController(view).navigate(com.venuenext.vnorderui.R.id.standsFragment, null, navOptions)
-                        } else {
-                            Navigation.findNavController(view).navigate(com.venuenext.vnorderui.R.id.menuFragment, null, navOptions)
-                        }
-                    } else {
-                        if (currentHostedFragment != null && currentHostedFragment !is StandsFragment) {
-                            Navigation.findNavController(view).navigate(com.venuenext.vnorderui.R.id.standsFragment, null, navOptions)
-                        } else {
-                            return@setOnNavigationItemSelectedListener false
-                        }
-                    }
-
-                    return@setOnNavigationItemSelectedListener true
-                }
-                R.id.navigation_myorders -> {
-                    val navHostFragment = supportFragmentManager.findFragmentById(R.id.fragment_main)
-                    val currentHostedFragment = navHostFragment?.childFragmentManager?.fragments?.get(0)
-
-                    if (currentHostedFragment != null && currentHostedFragment !is MyOrdersFragment) {
-                        Navigation.findNavController(view).navigate(com.venuenext.vnorderui.R.id.myOrdersFragment, null, navOptions)
-                    } else {
-                        return@setOnNavigationItemSelectedListener false
-                    }
-
-                    return@setOnNavigationItemSelectedListener true
-                }
-                /* R.id.navigation_inbox -> {
-                    Navigation.findNavController(view).navigate(com.venuenext.vnorderui.R.id.inboxFragment)
-                    return@setOnNavigationItemSelectedListener true
-                } */
-                R.id.navigation_settings -> {
-                    Navigation.findNavController(view).navigate(com.venuenext.vnorderui.R.id.settingsFragment)
-                    return@setOnNavigationItemSelectedListener true
-                }
-            }
-            false
-        }
-
-        GlobalScope.async {
+        coroutineScope.launch(Dispatchers.IO) {
             try {
-                VenueNext.notificationTitle = "Intel Demo"
-                VenueNext.notificationSmallIcon = R.mipmap.ic_launcher
-                VenueNext.notificationLargeIcon = R.mipmap.ic_launcher
-
-                VenueNext.newRelicSdkKey = "[API_KEY_GOES_HERE]"
+                val sdkKey = getString(R.string.vn_sdk_key)
+                val sdkSecret = getString(R.string.vn_sdk_secret)
 
                 VenueNext.configureAnalytics(FirebaseAnalytics(this@MainActivity))
                 VenueNext.configureAnalytics(LocalyticsAnalytics(this@MainActivity, application!!))
-                VenueNextOrders.configurePaymentProcessing(BraintreePaymentProcessableFragment(), true)
 
-                VenueNext.initialize("[SDK_KEY_GOES_HERE]", "[SDK_SECRET_GOES_HERE]", this@MainActivity).await()
-            } catch (e: Exception) {
+                VNPayment.configurePaymentProcessing(BraintreePaymentProcessableFragment(), true)
+
+                VenueNext.ticketingInterface = this@MainActivity
+                VenueNext.walletInterface = this@MainActivity
+
+                VenueNext.initialize(sdkKey, sdkSecret, this@MainActivity).await()
+
+                // Initialize top level module objects to handle deep links
+                VenueNext.registerDeepLinkable(VNOrderUI, VNWalletUI)
+
+                // Call configure to set virtual currency toggle visibility in the wallet UI
+                VNWalletUI.configure(
+                    isVirtualCurrencyToggleVisible = true,
+                    qrConfig = QrConfig.VC_AND_SCANNER,
+                    actionBarTitle = getString(R.string.wallet_title)
+                )
+
                 withContext(Dispatchers.Main) {
                     completeInitialize()
                 }
+
+            } catch (e: Exception) {
+                Log.e(TAG, "Initialization failed", e)
+                finish()
             }
 
-            withContext(Dispatchers.Main) {
-                completeInitialize()
+        }
+    }
+
+    override fun onNavigationItemSelected(menuItem: MenuItem): Boolean {
+        return when (menuItem.itemId) {
+            R.id.navigation_food_and_bev_rvc -> {
+                navController.navigate(R.id.action_to_food_bev_flow)
+                true
             }
+            // This flow is not currently supported by the SDK
+//            R.id.navigation_merchandise_rvc -> {
+//                navController.navigate(R.id.action_to_merchandise_flow)
+//                true
+//            }
+            R.id.navigation_marketplace_rvc -> {
+                navController.navigate(R.id.action_to_experience_flow)
+                true
+            }
+            R.id.navigation_order_history -> {
+                navController.navigate(R.id.action_to_my_orders_flow)
+                true
+            }
+            R.id.navigation_wallet -> {
+                showWallet()
+                true
+            }
+            R.id.navigation_more -> {
+                Snackbar.make(view, R.string.nav_more_message, Snackbar.LENGTH_SHORT).show()
+                false
+            }
+            else -> false
         }
     }
 
     override fun onResume() {
         super.onResume()
 
-        VenueNext.subscribeOrderNotification(this)
         VenueNext.checkIsConnected(this)
     }
 
-    override fun onPause() {
-        super.onPause()
-
-        VenueNext.unsubscribeOrderNotification(this)
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        VenueNext.analytics?.forEach {
+            if (it is LocalyticsAnalytics) it.permissionHelper
+                .checkLocationPermissionRequest(requestCode, permissions, grantResults)
+        }
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
     }
 
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
-
-        val localyticsInterface = VenueNext.getLocalyticsInterface()
-        localyticsInterface.let {
-            it?.handlePushNotificationIntent(this, intent)
-        }
-    }
-
-    override fun onOrderNotification(orderUUID: String?) {
-        if (orderUUID.isNullOrEmpty()) {
-            return
-        }
-
-        VenueNextOrders.orderUUID = orderUUID
-
-        Navigation.findNavController(view).navigate(com.venuenext.vnorderui.R.id.orderSummaryFragment)
+        handleIntent()
     }
 
     private fun completeInitialize() {
         registerFCM()
 
         bottomNavigationView.visibility = View.VISIBLE
+        navController.navigate(R.id.start_main)
 
-        // Use bundle to provide product type filter for stands
-        //val bundle = bundleOf("productType" to ProductType.FOOD.value)
-        //Navigation.findNavController(view).navigate(R.id.action_main_to_stands, bundle)
+        // Handle deep linking after the app has loaded
+        handleIntent()
+    }
 
-        Navigation.findNavController(view).navigate(R.id.action_main_to_stands)
+    private fun handleIntent() {
+        if (intent?.action == Intent.ACTION_VIEW) {
+            intent.data?.let {
+                if (VenueNext.canHandleDeepLink(it)) {
+
+                    VenueNext.handleDeepLink(view, it)
+
+                    // Clear the arguments so the deep link isn't triggered again
+                    intent = null
+                }
+            }
+        }
     }
 
     private fun registerFCM() {
@@ -180,5 +184,22 @@ class MainActivity : AppCompatActivity(), OrderNotificationListener {
                 // Register device
                 VenueNext.registerDevice(this@MainActivity, token!!)
             })
+    }
+
+    override fun startLoginFlow() {
+        if (!presenceSDK.isLoggedIn) {
+            navController.navigate(R.id.action_to_ticketing_flow)
+        } else {
+            Log.w(TAG, "Login requested but user is already logged in")
+        }
+    }
+
+    override fun showWallet() {
+        // Show the login instead of Wallet if the user is not logged in
+        val destination = if (presenceSDK.isLoggedIn)
+            R.id.action_to_wallet_flow
+        else R.id.action_to_ticketing_flow
+
+        navController.navigate(destination)
     }
 }
