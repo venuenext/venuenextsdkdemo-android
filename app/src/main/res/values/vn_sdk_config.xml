@@ -26,5 +26,6 @@
     <!-- Wallet -->
     <string name="wallet_title">Wallet</string>
     <string name="virtual_currency_name">VN Bucks</string>
+    <string name="vn_sth_member_name">VN Club</string>
 
 </resources>

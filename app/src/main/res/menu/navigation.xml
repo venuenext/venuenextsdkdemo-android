@@ -8,7 +8,7 @@
     <!-- Merchandise flow is not currently supported in the SDK -->
 <!--    <item-->
 <!--        android:id="@+id/navigation_merchandise_rvc"-->
-<!--        android:icon="@drawable/ic_icon_merchandise"-->
+<!--        android:icon="@drawable/ic_merchandise"-->
 <!--        android:title="@string/nav_merchandise_rvc_title" />-->
     <item
         android:id="@+id/navigation_marketplace_rvc"

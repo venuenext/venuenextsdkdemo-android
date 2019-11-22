@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorSurface">
+
+        <TextView
+            android:id="@+id/settingTextView"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:fontFamily="sans-serif"
+            android:gravity="center_vertical"
+            android:paddingStart="10dp"
+            android:paddingEnd="10dp"
+            android:textColor="@color/colorOnSurface"
+            android:textSize="18sp"
+            app:layout_constraintEnd_toStartOf="@+id/navigationImageView"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="@tools:sample/lorem" />
+
+        <ImageView
+            android:id="@+id/navigationImageView"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:paddingStart="2dp"
+            android:paddingEnd="10dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/chevron_right"
+            android:tint="@color/colorOnSurface"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:background="@color/colorBackground"
+            app:layout_constraintTop_toBottomOf="@id/navigationImageView" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

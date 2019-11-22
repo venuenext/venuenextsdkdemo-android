@@ -61,20 +61,22 @@ class TMPresenceFragment : Fragment(), PresenceLoginListener,
     override fun onClick(v: View?) {
         when (v?.id) {
             binding.contentPresenceBackImageview.id -> findNavController().navigateUp()
-            binding.contentPresenceLogoutButton.id -> presenceSDK.logOut()
+            binding.contentPresenceLogoutButton.id -> {
+                presenceSDK.logOut()
+
+                showView(true)
+            }
         }
     }
 
     // Note: This is called from a background thread
-    override fun onLoginSuccessful(p0: TMLoginApi.BackendName?, p1: String?) {
+    override fun onLoginSuccessful(backendName: TMLoginApi.BackendName?, p1: String?) {
         coroutineScope.launch(Dispatchers.Main) {
-            presenceSDK.getMemberInfo(p0, this@TMPresenceFragment)
-            binding.contentPresenceLogoutButton.isVisible = true
+            presenceSDK.getMemberInfo(backendName, this@TMPresenceFragment)
         }
     }
 
     override fun onLogoutAllSuccessful() {
-        binding.contentPresenceLogoutButton.isVisible = true
         VNTicket.logout(::vnSdkLogoutSuccess, ::vnSdkLogoutFailure)
     }
 
@@ -87,6 +89,8 @@ class TMPresenceFragment : Fragment(), PresenceLoginListener,
             // Configuration failed
             Snackbar.make(binding.root, getText(R.string.tm_config_failure), Snackbar.LENGTH_LONG)
                 .show()
+
+            showView(false)
         }
     }
 
@@ -96,15 +100,18 @@ class TMPresenceFragment : Fragment(), PresenceLoginListener,
         coroutineScope.launch(Dispatchers.Main) {
             Log.i(TAG, "VenueNext logout success")
             presenceSDK.stop()
-            findNavController().navigateUp()
+
+            // Refresh to the login state
+            showView(false)
+            ticketmasterConfigListener?.configurePresenceSDK()
         }
     }
 
     // Note: This is a callback from a background thread
-    private fun vnSdkLogoutFailure(exception: Exception) {
+    private fun vnSdkLogoutFailure(e: Exception) {
         coroutineScope.launch(Dispatchers.Main) {
             // Hide UI, back press, etc
-            Log.e(TAG, "Logout failed", exception)
+            Log.e(TAG, "Logout failed", e)
             Snackbar.make(binding.root, getText(R.string.sdk_logout_failure), Snackbar.LENGTH_LONG)
                 .show()
         }
@@ -120,33 +127,29 @@ class TMPresenceFragment : Fragment(), PresenceLoginListener,
             val email = it.email
             val firstName = it.firstName
             val lastName = it.lastName
-            val displayAccountId = null
 
             // Register the login listener
             VNTicket.registerLoginResultListener(this)
 
-            val ticketingLoginData =
-                TicketingLoginData(email, memberId, firstName, lastName, displayAccountId)
+            val ticketingLoginData = TicketingLoginData(email, memberId, firstName, lastName)
 
             // Kick off the (asynchronous) SDK login handler
             VNTicket.onLoginSuccess(ticketingLoginData)
 
             // We recommend showing a progress bar or other loading UI here
-            binding.fragmentPresenceContainer.isVisible = false
-            binding.progressBar.isVisible = true
+            showView(false)
 
         }
     }
 
-    // Called asynchronously. Ticketing data can be safely ignored
+    // Called asynchronously. Ticketing data can be safely ignored. Wallet is ready to be shown!
     override fun onLoginSuccess(ticketingLoginData: TicketingLoginData) {
         VNTicket.unregisterLoginResultListener(this)
 
-        // Wallet is ready to be shown!
-
         // This demo app does not support full TM functionality, so we are popping this fragment
         findNavController().navigateUp()
-        findNavController().navigate(R.id.action_to_wallet_flow)
+
+        showView(false)
     }
 
     // Unhide loading UI and show an error here
@@ -156,8 +159,6 @@ class TMPresenceFragment : Fragment(), PresenceLoginListener,
 
             Snackbar.make(binding.root, getText(R.string.sdk_login_failure), Snackbar.LENGTH_LONG)
                 .show()
-
-            findNavController().navigateUp()
         }
     }
 
@@ -169,6 +170,13 @@ class TMPresenceFragment : Fragment(), PresenceLoginListener,
         }
 
         ticketmasterConfigListener = null
+    }
+
+    private fun showView(isLoading: Boolean) {
+        binding.fragmentPresenceContainer.isVisible = !isLoading
+        binding.progressBar.isVisible = isLoading
+
+        binding.contentPresenceLogoutButton.isVisible = presenceSDK.isLoggedIn
     }
 
     // Unused for this example

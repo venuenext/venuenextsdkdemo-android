@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="colorPrimary">#1774c1</color>
+    <color name="colorPrimaryLight">#5fa2f4</color>
     <color name="colorPrimaryDark">#004990</color>
-    <color name="colorAccent">#8E73A3</color>
-    <color name="colorAccentDark">#604774</color>
+    <color name="colorAccent">#4527a0</color>
+    <color name="colorAccentLight">#7953d2</color>
+    <color name="colorAccentDark">#000070</color>
 
     <color name="colorBackground">#F3F3F3</color>
     <color name="colorSurface">#FFFFFF</color>
@@ -22,4 +24,6 @@
     <color name="colorOnInactive">#66000000</color>
 
     <color name="shimmer">#AAAAAA</color>
+
+    <color name="vn_sth_color">@color/colorPrimaryLight</color>
 </resources>

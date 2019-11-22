@@ -30,8 +30,7 @@ import kotlinx.coroutines.withContext
 private const val TAG = "MainActivity"
 
 class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemSelectedListener,
-    TicketingInterface,
-    WalletInterface {
+    TicketingInterface, WalletInterface {
 
     private lateinit var view: View
     private lateinit var bottomNavigationView: BottomNavigationView
@@ -97,7 +96,7 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
                 navController.navigate(R.id.action_to_food_bev_flow)
                 true
             }
-            // This flow is not currently supported by the SDK
+            // This flow is not currently fully supported by the SDK
 //            R.id.navigation_merchandise_rvc -> {
 //                navController.navigate(R.id.action_to_merchandise_flow)
 //                true
@@ -115,8 +114,8 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
                 true
             }
             R.id.navigation_more -> {
-                Snackbar.make(view, R.string.nav_more_message, Snackbar.LENGTH_SHORT).show()
-                false
+                navController.navigate(R.id.action_to_settings_flow)
+                true
             }
             else -> false
         }
@@ -124,6 +123,11 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
 
     override fun onResume() {
         super.onResume()
+
+        // This exists here only because the settings flow will replace the ticketing and wallet
+        // callbacks. This is not normally needed!
+        VenueNext.ticketingInterface = this
+        VenueNext.walletInterface = this
 
         VenueNext.checkIsConnected(this)
     }
@@ -149,7 +153,12 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
         registerFCM()
 
         bottomNavigationView.visibility = View.VISIBLE
-        navController.navigate(R.id.start_main)
+
+        try {
+            navController.navigate(R.id.start_main)
+        } catch (e: Exception) {
+            Log.e(TAG, "Navigation configuration error", e)
+        }
 
         // Handle deep linking after the app has loaded
         handleIntent()

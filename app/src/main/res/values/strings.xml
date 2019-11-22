@@ -1,6 +1,6 @@
 <resources>
-    <string name="app_name">VenueNext Demo</string>
-    <string name="app_version">0.5.0</string>
+    <string name="app_name">VenueNext SDK Demo</string>
+    <string name="app_version">0.6.0</string>
 
     <!-- Navigation Titles -->
     <string name="nav_food_and_bev_rvc_title">Menus</string>
@@ -11,13 +11,30 @@
     <string name="nav_more_title">More</string>
 
     <!-- Settings -->
-    <string name="nav_more_message">Coming soon!</string>
+    <string name="settings_title">Settings</string>
+
+    <string name="settings_section_menus">Revenue Centers</string>
+    <string name="settings_display_all_rvc">Launch All Revenue Centers Flow</string>
+    <string name="settings_display_f_and_b_rvc">Launch Food &amp; Bev Flow</string>
+    <string name="settings_display_merchandise_rvc">Launch Merchandise Flow</string>
+    <string name="settings_display_marketplace_experiences">Launch Marketplace Experiences Flow</string>
+
+
+    <string name="settings_section_orders">Order History</string>
+    <string name="settings_launch_order_history">Launch Orders Flow</string>
+
+    <string name="settings_section_wallet">Wallet</string>
+    <string name="settings_launch_wallet">Launch Wallet</string>
+
+    <!-- Demo app settings -->
+    <string name="settings_section_demo">Demo App</string>
+    <string name="settings_launch_tm">Launch Ticketmaster</string>
 
     <!-- Ticketmaster -->
     <string name="logout">Logout</string>
     <string name="tickets">Tickets</string>
     <string name="tm_config_failure">Ticketmaster is unavailable, please try again later</string>
-    <string name="sdk_login_failure">Failed to login. Please try again later</string>
-    <string name="sdk_logout_failure">Failed to logout. Please try again later</string>
+    <string name="sdk_login_failure">Failed to log in to VenueNext SDK. Please try again later</string>
+    <string name="sdk_logout_failure">Failed to log out of VenueNext SDK. Please try again later</string>
 
 </resources>
