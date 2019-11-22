@@ -55,8 +55,8 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
 
         coroutineScope.launch(Dispatchers.IO) {
             try {
-                val sdkKey = getString(R.string.vn_sdk_key)
-                val sdkSecret = getString(R.string.vn_sdk_secret)
+                val sdkKey = "YOUR_VN_SDK_KEY"
+                val sdkSecret = "YOUR_VN_SDK_SECRET"
 
                 VenueNext.configureAnalytics(FirebaseAnalytics(this@MainActivity))
                 VenueNext.configureAnalytics(LocalyticsAnalytics(this@MainActivity, application!!))
@@ -96,11 +96,6 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
                 navController.navigate(R.id.action_to_food_bev_flow)
                 true
             }
-            // This flow is not currently fully supported by the SDK
-//            R.id.navigation_merchandise_rvc -> {
-//                navController.navigate(R.id.action_to_merchandise_flow)
-//                true
-//            }
             R.id.navigation_marketplace_rvc -> {
                 navController.navigate(R.id.action_to_experience_flow)
                 true

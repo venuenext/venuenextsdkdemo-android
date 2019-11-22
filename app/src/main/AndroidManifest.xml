@@ -22,14 +22,14 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
             <intent-filter>
-                <data android:scheme="@string/localytics_key" />
+                <data android:scheme="YOUR_LOCALYTICS_SCHEME" />
                 <action android:name="android.intent.action.VIEW" />
 
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
             </intent-filter>
             <intent-filter>
-                <data android:scheme="@string/vn_deep_link_scheme" />
+                <data android:scheme="YOUR_APP_DEEPLINK_SCHEME" />
                 <action android:name="android.intent.action.VIEW" />
 
                 <category android:name="android.intent.category.DEFAULT" />
@@ -53,7 +53,7 @@
         </service>
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
-            android:value="@string/gms_ads_key" />
+            android:value="YOUR_GMS_ADS_KEY" />
 
         <activity android:name=".settings.VenueNextFlowActivity" />
 
