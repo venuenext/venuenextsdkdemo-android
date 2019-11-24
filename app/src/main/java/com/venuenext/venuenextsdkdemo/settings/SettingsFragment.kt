@@ -11,12 +11,15 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.snackbar.Snackbar
+import com.ticketmaster.presencesdk.PresenceSDK
 import com.venuenext.venuenextsdkdemo.R
 import com.venuenext.venuenextsdkdemo.databinding.FragmentSettingsBinding
 
 private const val SPACE_HEIGHT = 18
 
 class SettingsFragment : Fragment() {
+    private val presenceSDK: PresenceSDK by lazy { PresenceSDK.getPresenceSDK(activity!!.application) }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -50,7 +53,16 @@ class SettingsFragment : Fragment() {
             R.string.settings_launch_order_history -> R.id.action_to_my_orders_flow
 
             // Display Wallet
-            R.string.settings_launch_wallet -> R.id.action_to_wallet_flow
+            R.string.settings_launch_wallet -> {
+                if (presenceSDK.isLoggedIn) {
+                    R.id.action_to_wallet_flow
+                } else {
+                    // Wallet should not be shown if you are logged out of your ticketing provider
+                    Snackbar.make(view!!, R.string.settings_wallet_not_ready, Snackbar.LENGTH_SHORT)
+                        .show()
+                    null
+                }
+            }
 
             // Demo Specific Settings
             R.string.settings_launch_tm -> R.id.action_to_ticketing_flow
