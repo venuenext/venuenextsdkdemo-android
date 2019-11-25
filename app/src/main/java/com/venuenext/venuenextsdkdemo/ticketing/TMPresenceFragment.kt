@@ -17,6 +17,7 @@ import com.ticketmaster.presencesdk.login.TMLoginApi
 import com.ticketmaster.presencesdk.login.UserInfoManager
 import com.venuenext.venuenextsdkdemo.R
 import com.venuenext.venuenextsdkdemo.databinding.FragmentPresenceBinding
+import com.venuenext.vncore.VenueNext
 import com.venuenext.vncoreui.LifecycleCoroutineScope
 import com.venuenext.vnticket.VNTicket
 import com.venuenext.vnticket.model.TicketingLoginData
@@ -137,7 +138,7 @@ class TMPresenceFragment : Fragment(), PresenceLoginListener,
             VNTicket.onLoginSuccess(ticketingLoginData)
 
             // We recommend showing a progress bar or other loading UI here
-            showView(false)
+            showView(true)
 
         }
     }
@@ -148,6 +149,7 @@ class TMPresenceFragment : Fragment(), PresenceLoginListener,
 
         // This demo app does not support full TM functionality, so we are popping this fragment
         findNavController().navigateUp()
+        VenueNext.walletInterface?.showWallet()
 
         showView(false)
     }
@@ -176,7 +178,7 @@ class TMPresenceFragment : Fragment(), PresenceLoginListener,
         binding.fragmentPresenceContainer.isVisible = !isLoading
         binding.progressBar.isVisible = isLoading
 
-        binding.contentPresenceLogoutButton.isVisible = presenceSDK.isLoggedIn
+        binding.contentPresenceLogoutButton.isVisible = presenceSDK.isLoggedIn && !isLoading
     }
 
     // Unused for this example

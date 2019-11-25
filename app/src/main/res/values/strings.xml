@@ -29,6 +29,9 @@
 
     <!-- Demo app settings -->
     <string name="settings_section_demo">Demo App</string>
+    <string name="settings_logout_tm">Log out of Ticketmaster</string>
+    <string name="tm_not_logged_in">Not logged in</string>
+    <string name="tm_logging_out">Logging out of Ticketmaster</string>
     <string name="settings_launch_tm">Launch Ticketmaster</string>
 
     <!-- Ticketmaster -->

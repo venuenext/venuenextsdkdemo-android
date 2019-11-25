@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.annotation.StringRes
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
@@ -65,6 +66,15 @@ class SettingsFragment : Fragment() {
             }
 
             // Demo Specific Settings
+            R.string.settings_logout_tm -> {
+                if (presenceSDK.isLoggedIn) {
+                    presenceSDK.logOut()
+                    Toast.makeText(requireActivity(), R.string.tm_logging_out, Toast.LENGTH_SHORT)
+                        .show()
+                } else
+                    Snackbar.make(view!!, R.string.tm_not_logged_in, Snackbar.LENGTH_SHORT).show()
+                null
+            }
             R.string.settings_launch_tm -> R.id.action_to_ticketing_flow
             else -> null
         }
