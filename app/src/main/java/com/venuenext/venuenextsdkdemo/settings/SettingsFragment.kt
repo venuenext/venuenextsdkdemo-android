@@ -32,6 +32,9 @@ class SettingsFragment : Fragment() {
         val viewModel =
             ViewModelProviders.of(this@SettingsFragment).get(SettingsViewModel::class.java)
 
+        binding.version.text =
+            getString(R.string.settings_app_version, getString(R.string.app_version))
+
         val adapter = SettingsSectionAdapter(viewModel.settingsSections, ::onItemClicked)
         binding.recyclerView.apply {
             addItemDecoration(MarginItemDecoration(SPACE_HEIGHT))
