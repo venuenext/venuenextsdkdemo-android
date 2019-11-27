@@ -12,11 +12,10 @@
     </style>
 
     <style name="HeaderBar">
-        <item name="android:background">@color/colorSecondary</item>
+        <item name="android:background">@color/colorPrimary</item>
     </style>
 
     <style name="BottomNavigation">
-        <item name="itemBackground">@color/colorSecondary</item>
         <item name="itemIconTint">@drawable/bottom_nav_color_state</item>
         <item name="itemTextColor">@drawable/bottom_nav_color_state</item>
         <item name="paddingStart">10dp</item>

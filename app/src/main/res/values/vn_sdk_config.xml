@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- VenueNext SDK Configuration -->
+
+    <!-- Food & Beverage -->
+    <string name="food_and_bev_rvc_title">Menus</string>
+
+    <!-- Merchandise -->
+    <string name="merchandise_rvc_title">Gear</string>
+
+    <!-- Marketplace Experiences -->
+    <string name="marketplace_experiences_rvc_title">Market</string>
+
+    <!-- Order History -->
+    <string name="order_history_title">Orders</string>
+
+    <!-- Wallet -->
+    <string name="wallet_title">Wallet</string>
+    <string name="virtual_currency_name">VN Bucks</string>
+    <string name="vn_sth_member_name">VN Club</string>
+
+</resources>

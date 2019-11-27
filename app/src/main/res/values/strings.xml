@@ -1,4 +1,45 @@
 <resources>
-    <string name="app_name">VNDemo</string>
-    <string name="app_version">0.1.4</string>
+    <string name="app_name">VenueNext SDK Demo</string>
+    <string name="app_version">0.6.2</string>
+
+    <!-- Navigation Titles -->
+    <string name="nav_food_and_bev_rvc_title">Menus</string>
+    <string name="nav_merchandise_rvc_title">Gear</string>
+    <string name="nav_marketplace_experiences_rvc_title">Market</string>
+    <string name="nav_order_history_title">Orders</string>
+    <string name="nav_wallet_title">Wallet</string>
+    <string name="nav_more_title">More</string>
+
+    <!-- Settings -->
+    <string name="settings_title">Settings</string>
+    <string name="settings_app_version">VenueNext SDK Version: %s</string>
+
+    <string name="settings_section_menus">Revenue Centers</string>
+    <string name="settings_display_all_rvc">Launch All Revenue Centers Flow</string>
+    <string name="settings_display_f_and_b_rvc">Launch Food &amp; Bev Flow</string>
+    <string name="settings_display_merchandise_rvc">Launch Merchandise Flow</string>
+    <string name="settings_display_marketplace_experiences">Launch Marketplace Experiences Flow</string>
+
+
+    <string name="settings_section_orders">Order History</string>
+    <string name="settings_launch_order_history">Launch Orders Flow</string>
+
+    <string name="settings_section_wallet">Wallet</string>
+    <string name="settings_launch_wallet">Launch Wallet</string>
+    <string name="settings_wallet_not_ready">Log in to ticketing provider before accessing Wallet</string>
+
+    <!-- Demo app settings -->
+    <string name="settings_section_demo">Demo App</string>
+    <string name="settings_logout_tm">Log out of Ticketmaster</string>
+    <string name="tm_not_logged_in">Not logged in</string>
+    <string name="tm_logging_out">Logging out of Ticketmaster</string>
+    <string name="settings_launch_tm">Launch Ticketmaster</string>
+
+    <!-- Ticketmaster -->
+    <string name="logout">Logout</string>
+    <string name="tickets">Tickets</string>
+    <string name="tm_config_failure">Ticketmaster is unavailable, please try again later</string>
+    <string name="sdk_login_failure">Failed to log in to VenueNext SDK. Please try again later</string>
+    <string name="sdk_logout_failure">Failed to log out of VenueNext SDK. Please try again later</string>
+
 </resources>
