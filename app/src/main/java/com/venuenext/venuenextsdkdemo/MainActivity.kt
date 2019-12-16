@@ -139,11 +139,6 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
     }
 
-    override fun onNewIntent(intent: Intent) {
-        super.onNewIntent(intent)
-        handleIntent()
-    }
-
     private fun completeInitialize() {
         registerFCM()
 
@@ -152,10 +147,10 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
         try {
             navController.navigate(R.id.start_main)
         } catch (e: Exception) {
-            Log.e(TAG, "Navigation configuration error", e)
+            Log.i(TAG, "Navigation configuration error", e)
         }
 
-        // Handle deep linking after the app has loaded
+        // Only handle deep links after the SDK has loaded
         handleIntent()
     }
 

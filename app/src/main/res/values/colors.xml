@@ -23,7 +23,21 @@
     <color name="colorOnError">#FFFFFF</color>
     <color name="colorOnInactive">#66000000</color>
 
-    <color name="shimmer">#AAAAAA</color>
+    <!-- Override these as desired -->
+    <color name="vnColorPrimary">@color/colorPrimary</color>
+    <color name="vnColorPrimaryDark">@color/colorPrimaryDark</color>
+    <color name="vnColorAccent">@color/colorPrimary</color>
+    <color name="vnColorAccentDark">@color/colorPrimaryDark</color>
 
-    <color name="vn_sth_color">@color/colorPrimaryLight</color>
+    <color name="vnColorSurface">@color/colorSurface</color>
+
+    <color name="vnColorOnPrimary">@color/colorOnPrimary</color>
+    <color name="vnColorOnPrimaryVariant">@color/colorOnPrimaryVariant</color>
+    <color name="vnColorOnAccent">@color/colorOnAccent</color>
+    <color name="vnColorOnAccentVariant">@color/colorOnAccentVariant</color>
+    <color name="vnColorOnSurface">@color/colorOnSurface</color>
+    <color name="vnColorOnSurfaceVariant">@color/colorOnSurfaceVariant</color>
+
+    <color name="vn_sth_color">@color/colorAccent</color>
+    <color name="vn_on_sth_color">#FFFFFF</color>
 </resources>
