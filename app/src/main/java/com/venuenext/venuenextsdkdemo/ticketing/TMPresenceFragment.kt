@@ -61,7 +61,7 @@ class TMPresenceFragment : Fragment(), PresenceLoginListener,
 
     override fun onClick(v: View?) {
         when (v?.id) {
-            binding.contentPresenceBackImageview.id -> findNavController().navigateUp()
+            binding.contentPresenceBackImageview.id -> findNavController().popBackStack()
             binding.contentPresenceLogoutButton.id -> {
                 presenceSDK.logOut()
 
@@ -95,27 +95,21 @@ class TMPresenceFragment : Fragment(), PresenceLoginListener,
         }
     }
 
-    // Note: This is a callback from a background thread
     private fun vnSdkLogoutSuccess() {
         // Hide UI, back press, etc
-        coroutineScope.launch(Dispatchers.Main) {
-            Log.i(TAG, "VenueNext logout success")
-            presenceSDK.stop()
+        Log.i(TAG, "VenueNext logout success")
+        presenceSDK.stop()
 
-            // Refresh to the login state
-            showView(false)
-            ticketmasterConfigListener?.configurePresenceSDK()
-        }
+        // Refresh to the login state
+        showView(false)
+        ticketmasterConfigListener?.configurePresenceSDK()
     }
 
-    // Note: This is a callback from a background thread
     private fun vnSdkLogoutFailure(e: Exception) {
-        coroutineScope.launch(Dispatchers.Main) {
-            // Hide UI, back press, etc
-            Log.e(TAG, "Logout failed", e)
-            Snackbar.make(binding.root, getText(R.string.sdk_logout_failure), Snackbar.LENGTH_LONG)
-                .show()
-        }
+        // Hide UI, back press, etc
+        Log.e(TAG, "Logout failed", e)
+        Snackbar.make(binding.root, getText(R.string.sdk_logout_failure), Snackbar.LENGTH_LONG)
+            .show()
     }
 
     override fun onMemberInfoLoaded(info: UserInfoManager.MemberInfo?, p1: String?) {
@@ -127,7 +121,7 @@ class TMPresenceFragment : Fragment(), PresenceLoginListener,
             val memberId = it.memberId
             val email = it.email
             val firstName = it.firstName
-            val lastName = it.lastName
+            val lastName = if (it.lastName == "null") "" else it.lastName
 
             // Register the login listener
             VNTicket.registerLoginResultListener(this)
@@ -148,7 +142,7 @@ class TMPresenceFragment : Fragment(), PresenceLoginListener,
         VNTicket.unregisterLoginResultListener(this)
 
         // This demo app does not support full TM functionality, so we are popping this fragment
-        findNavController().navigateUp()
+        findNavController().popBackStack()
         VenueNext.walletInterface?.showWallet()
 
         showView(false)
@@ -168,6 +162,7 @@ class TMPresenceFragment : Fragment(), PresenceLoginListener,
         super.onDestroy()
 
         if (!memberInfoDidLoad) {
+            VNTicket.unregisterLoginResultListener(this)
             VNTicket.onLoginFailure()
         }
 

@@ -2,8 +2,7 @@ package com.venuenext.venuenextsdkdemo.ticketing
 
 import com.ticketmaster.presencesdk.PresenceSDK
 import com.ticketmaster.presencesdk.login.PresenceSdkConfigListener
-import com.venuenext.vnwallet.BuildConfig
-import com.venuenext.vnwallet.R
+import com.venuenext.venuenextsdkdemo.R
 
 internal typealias LaunchPresenceSDKListener = (Boolean) -> Unit
 
@@ -19,8 +18,8 @@ class TicketmasterConfigListener(
         presenceSDK.apply {
             registerConfigListener(this@TicketmasterConfigListener)
             setConfig(
-                BuildConfig.ticketmasterSdkKey,
-                BuildConfig.ticketmasterDisplayName,
+                "TM SDK_KEY",
+                "TM Display Name",
                 true
             )
 

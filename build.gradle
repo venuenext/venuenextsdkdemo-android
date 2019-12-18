@@ -5,7 +5,7 @@ buildscript {
         kotlin_coroutines_version = '1.2.2'
         serialization_version = '0.11.1'
 
-        vn_sdk_version = '0.6.3'
+        vn_sdk_version = '0.6.4'
     }
 
     repositories {
@@ -19,7 +19,7 @@ buildscript {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         classpath "org.jetbrains.kotlin:kotlin-serialization:$kotlin_version"
         classpath "org.jfrog.buildinfo:build-info-extractor-gradle:4.7.3"
-        classpath "android.arch.navigation:navigation-safe-args-gradle-plugin:1.0.0"
+        classpath "androidx.navigation:navigation-safe-args-gradle-plugin:2.1.0"
         classpath 'com.google.gms:google-services:4.3.0'
         classpath 'io.fabric.tools:gradle:1.31.0'
     }
