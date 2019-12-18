@@ -1,43 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="colorPrimary">#1774c1</color>
-    <color name="colorPrimaryLight">#5fa2f4</color>
     <color name="colorPrimaryDark">#004990</color>
+    <color name="colorSecondary">#4CAF50</color>
     <color name="colorAccent">#4527a0</color>
-    <color name="colorAccentLight">#7953d2</color>
-    <color name="colorAccentDark">#000070</color>
 
     <color name="colorBackground">#F3F3F3</color>
     <color name="colorSurface">#FFFFFF</color>
-    <color name="colorError">#B00020</color>
-    <color name="colorInactive">#1A000000</color>
 
     <color name="colorOnPrimary">#FFFFFF</color>
     <color name="colorOnPrimaryVariant">#A6FFFFFF</color>
-    <color name="colorOnAccent">#FFFFFF</color>
-    <color name="colorOnAccentVariant">#A6000000</color>
-    <color name="colorOnBackground">#000000</color>
-    <color name="colorOnBackgroundVariant">#66000000</color>
-    <color name="colorOnSurface">#000000</color>
-    <color name="colorOnSurfaceVariant">#A6000000</color>
-    <color name="colorOnError">#FFFFFF</color>
-    <color name="colorOnInactive">#66000000</color>
 
-    <!-- Override these as desired -->
+    <color name="colorOnBackground">#000000</color>
+
+    <!-- Colors Used by VenueNext SDK -->
     <color name="vnColorPrimary">@color/colorPrimary</color>
     <color name="vnColorPrimaryDark">@color/colorPrimaryDark</color>
-    <color name="vnColorAccent">@color/colorPrimary</color>
-    <color name="vnColorAccentDark">@color/colorPrimaryDark</color>
+
+    <color name="vnColorAccent">@color/colorAccent</color>
+    <color name="vnColorAccentDark">#301974</color>
 
     <color name="vnColorSurface">@color/colorSurface</color>
 
     <color name="vnColorOnPrimary">@color/colorOnPrimary</color>
     <color name="vnColorOnPrimaryVariant">@color/colorOnPrimaryVariant</color>
-    <color name="vnColorOnAccent">@color/colorOnAccent</color>
-    <color name="vnColorOnAccentVariant">@color/colorOnAccentVariant</color>
-    <color name="vnColorOnSurface">@color/colorOnSurface</color>
-    <color name="vnColorOnSurfaceVariant">@color/colorOnSurfaceVariant</color>
 
-    <color name="vn_sth_color">@color/colorAccent</color>
-    <color name="vn_on_sth_color">#FFFFFF</color>
+    <color name="vnColorOnAccent">#FFFFFF</color>
+    <color name="vnColorOnAccentVariant">#A6FFFFFF</color>
+
+    <color name="colorOnSurface">#000000</color>
+    <color name="colorOnSurfaceVariant">#2B2B2B</color>
+
+    <color name="vn_sth_color">@color/colorSecondary</color>
 </resources>
