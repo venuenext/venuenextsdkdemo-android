@@ -9,7 +9,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.Navigation
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.iid.FirebaseInstanceId
 import com.ticketmaster.presencesdk.PresenceSDK
 import com.venuenext.vnanalytics.firebase.FirebaseAnalytics
@@ -18,6 +17,7 @@ import com.venuenext.vncore.protocol.TicketingInterface
 import com.venuenext.vncore.protocol.WalletInterface
 import com.venuenext.vncoreui.LifecycleCoroutineScope
 import com.venuenext.vnlocalytics.localytics.LocalyticsAnalytics
+import com.venuenext.vnorder.stands.types.ProductType
 import com.venuenext.vnorderui.VNOrderUI
 import com.venuenext.vnpayment.VNPayment
 import com.venuenext.vnpayment.braintree.ui.BraintreePaymentProcessableFragment
@@ -66,17 +66,29 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
                 VenueNext.ticketingInterface = this@MainActivity
                 VenueNext.walletInterface = this@MainActivity
 
-                VenueNext.initialize(sdkKey, sdkSecret, this@MainActivity).await()
+                VenueNext.initialize(sdkKey, sdkSecret,this@MainActivity).await()
 
                 // Initialize top level module objects to handle deep links
                 VenueNext.registerDeepLinkable(VNOrderUI, VNWalletUI)
+
+                // List of product types that a user can purchase with virtual currency
+                // Does not need to be set if all are allowed because all are allowed by default
+                val virtualCurrencyProductTypes = listOf(
+                    ProductType.EXPERIENCE,
+                    ProductType.FOOD
+                )
 
                 // Call configure to set virtual currency toggle visibility in the wallet UI
                 VNWalletUI.configure(
                     isVirtualCurrencyToggleVisible = true,
                     qrConfig = QrConfig.VC_AND_SCANNER,
-                    actionBarTitle = getString(R.string.wallet_title)
+                    actionBarTitle = getString(R.string.wallet_title),
+                    isVirtualCurrencyEnabled = virtualCurrencyProductTypes.isNotEmpty()
                 )
+
+                // Configure virtual currency enabled product types so we can determine at
+                // checkout whether or not to show VC toggle
+                VNOrderUI.configureVirtualCurrencyProductTypes(virtualCurrencyProductTypes)
 
                 withContext(Dispatchers.Main) {
                     completeInitialize()
