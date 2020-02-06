@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.MenuItem
 import android.view.View
+import androidx.activity.addCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.Navigation
 import com.google.android.gms.tasks.OnCompleteListener
@@ -50,8 +51,10 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
         bottomNavigationView = findViewById(R.id.bottomNavigationView)
         bottomNavigationView.setOnNavigationItemSelectedListener(this)
 
+        onBackPressedDispatcher.addCallback(this) { handleBackPress() }
+
         // Setting a reselected listener will disallow selection of the same tab
-//        bottomNavigationView.setOnNavigationItemReselectedListener { /* Disallow reselection */ }
+        // bottomNavigationView.setOnNavigationItemReselectedListener { /* Disallow reselection */ }
 
         coroutineScope.launch(Dispatchers.IO) {
             try {
@@ -212,5 +215,10 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
         else R.id.action_to_ticketing_flow
 
         navController.navigate(destination)
+    }
+
+    private fun handleBackPress() {
+        // Here you can perform any actions that you would normally perform when overriding
+        // onBackPressed in the Activity that hosts VenueNext content.
     }
 }
