@@ -31,8 +31,23 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
                 getString(R.string.settings_section_demo),
                 listOf(R.string.settings_logout_tm)
             )
+            
+            val directLaunchSection = SettingsSection(
+                getString(R.string.settings_section_direct_launch),
+                listOf(
+                    R.string.settings_launch_to_food_menu,
+                    R.string.settings_launch_to_experience_menu,
+                    R.string.settings_launch_to_experience_detail
+                )
+            )
 
-            return@lazy mutableListOf(menusSection, ordersSection, walletSection, demoSection)
+            return@lazy mutableListOf(
+                menusSection,
+                ordersSection,
+                walletSection,
+                demoSection,
+                directLaunchSection
+            )
         }
     }
 }

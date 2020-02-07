@@ -50,19 +50,22 @@
     </action>
 
     <!-- Show Food and Beverage/Merchandise Menus -->
-    <action android:id="@id/action_start_to_stand_menu" app:destination="@id/to_stand_menu_flow">
+    <action android:id="@id/action_start_to_stand_menu" app:destination="@id/to_stand_menu_flow"
+            app:popUpTo="@id/mainFragment" app:popUpToInclusive="true">
         <argument android:name="showBackButton" app:argType="boolean" android:defaultValue="false"/>
         <argument android:name="toMenuId" app:argType="string" app:nullable="true" android:defaultValue="@null"/>
     </action>
 
     <!-- Show Experience Menus -->
-    <action android:id="@id/action_start_to_experience_menu" app:destination="@id/to_experience_menu_flow">
+    <action android:id="@id/action_start_to_experience_menu" app:destination="@id/to_experience_menu_flow"
+            app:popUpTo="@id/mainFragment" app:popUpToInclusive="true">
         <argument android:name="showBackButton" app:argType="boolean" android:defaultValue="true"/>
         <argument android:name="toMenuId" app:argType="string" app:nullable="true" android:defaultValue="@null"/>
     </action>
 
     <!-- Show Experience Details -->
-    <action android:id="@id/action_start_to_experience_detail" app:destination="@id/to_experience_detail_flow">
+    <action android:id="@id/action_start_to_experience_detail" app:destination="@id/to_experience_detail_flow"
+            app:popUpTo="@id/mainFragment" app:popUpToInclusive="true">
         <argument android:name="showBackButton" app:argType="boolean" android:defaultValue="true"/>
     </action>
 

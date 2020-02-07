@@ -79,13 +79,40 @@ class SettingsFragment : Fragment() {
                 null
             }
             R.string.settings_launch_tm -> R.id.action_to_ticketing_flow
+
+            // Direct Launch Flows
+            R.string.settings_launch_to_food_menu -> R.id.action_start_to_stand_menu
+            R.string.settings_launch_to_experience_menu -> R.id.action_start_to_experience_menu
+            R.string.settings_launch_to_experience_detail -> R.id.action_start_to_experience_detail
+            else -> null
+        }
+
+        val bundle = when (id) {
+            // Direct Launch Flows
+            R.string.settings_launch_to_food_menu -> bundleOf(
+                "toMenuId" to "<YourFoodMenuUUID>"
+            )
+            R.string.settings_launch_to_experience_menu -> bundleOf(
+                "toMenuId" to "<YourExperienceMenuUUID>"
+            )
+            R.string.settings_launch_to_experience_detail -> bundleOf(
+                "menu_id" to "<YourExperienceMenuUUID>",
+                "event_id" to "<YourEventUUID>",
+                "item_id" to "<YourItemUUID>"
+            )
             else -> null
         }
 
         navId?.let {
+            // Change this to false if you don't want a back button to be displayed in these views
+            bundle?.putBoolean("showBackButton", true)
+
             findNavController().navigate(
                 R.id.action_to_vn_activity_flow,
-                bundleOf("navId" to navId)
+                bundleOf(
+                    "navId" to navId,
+                    "inboundBundle" to bundle
+                )
             )
         }
     }
