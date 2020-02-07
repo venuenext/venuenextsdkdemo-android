@@ -1,5 +1,6 @@
 package com.venuenext.venuenextsdkdemo.settings
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -7,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.os.bundleOf
 import androidx.navigation.Navigation
 import com.ticketmaster.presencesdk.PresenceSDK
+import com.venuenext.venuenextsdkdemo.MainActivity
 import com.venuenext.venuenextsdkdemo.R
 import com.venuenext.vncore.VenueNext
 import com.venuenext.vncore.protocol.TicketingInterface
@@ -15,6 +17,7 @@ import java.lang.Exception
 
 private const val TAG = "VNFlowActivity"
 private const val ARG_NAV_ID = "navId"
+private const val ARG_INBOUND_BUNDLE = "inboundBundle"
 
 /**
  * This is a basic example of SDK flows outside of a single Activity app.
@@ -36,6 +39,7 @@ class VenueNextFlowActivity : AppCompatActivity(), TicketingInterface, WalletInt
 
         val bundle = savedInstanceState ?: intent?.extras
         val navId = requireNotNull(bundle?.getInt(ARG_NAV_ID)) { "Missing required nav ID" }
+        val inboundBundle = bundle?.getBundle(ARG_INBOUND_BUNDLE)
 
         // Receive callbacks for wallet and ticketing.
         VenueNext.ticketingInterface = this
@@ -46,8 +50,14 @@ class VenueNextFlowActivity : AppCompatActivity(), TicketingInterface, WalletInt
             if (navId != 0) {
                 navController.popBackStack()
 
+                val navBundle = inboundBundle ?: bundleOf("showBackButton" to true)
                 // Show the back button in these flows
-                navController.navigate(navId, bundleOf("showBackButton" to true))
+                navController.navigate(navId, navBundle)
+            } else {
+                // When back-navigating, this handles the scenario where the hosting Activity is
+                // re-launched. In our scenario, we start the MainActivity again, which drops the
+                // user back onto the StandsFragment. Apply your own flow/business logic here.
+                startActivity(Intent(this, MainActivity::class.java))
             }
         } catch (e: Exception) {
             Log.w(TAG, "Navigation configuration error", e)
