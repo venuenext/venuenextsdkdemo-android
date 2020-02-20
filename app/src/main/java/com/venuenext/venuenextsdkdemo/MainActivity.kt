@@ -132,6 +132,13 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
     }
 
     override fun onResume() {
+
+        // This fixes Localytics throwing an exception if there are no extras in the intent onResume
+        if (intent == null) {
+            intent = Intent()
+        }
+        intent.putExtras(intent.extras ?: Bundle())
+
         super.onResume()
 
         // This exists here only because the settings flow will replace the ticketing and wallet
@@ -220,5 +227,14 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
     private fun handleBackPress() {
         // Here you can perform any actions that you would normally perform when overriding
         // onBackPressed in the Activity that hosts VenueNext content.
+        // Get the nav host fragment for this activity
+        val navHostFragment = supportFragmentManager.findFragmentById(R.id.fragment_main)!!
+        val count = navHostFragment.childFragmentManager.backStackEntryCount
+        if (count == 0) {
+            finish()
+        }
+        else {
+            navController.popBackStack()
+        }
     }
 }

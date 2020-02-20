@@ -13,6 +13,7 @@ import com.venuenext.venuenextsdkdemo.R
 import com.venuenext.vncore.VenueNext
 import com.venuenext.vncore.protocol.TicketingInterface
 import com.venuenext.vncore.protocol.WalletInterface
+import androidx.activity.addCallback
 import java.lang.Exception
 
 private const val TAG = "VNFlowActivity"
@@ -45,6 +46,8 @@ class VenueNextFlowActivity : AppCompatActivity(), TicketingInterface, WalletInt
         VenueNext.ticketingInterface = this
         VenueNext.walletInterface = this
 
+        onBackPressedDispatcher.addCallback(this) { handleBackPress() }
+
         try {
             // Pop the loading fragment for this example
             if (navId != 0) {
@@ -65,6 +68,17 @@ class VenueNextFlowActivity : AppCompatActivity(), TicketingInterface, WalletInt
 
     }
 
+    override fun onResume() {
+
+        // This fixes Localytics throwing an exception if there are no extras in the intent onResume
+        if (intent == null) {
+            intent = Intent()
+        }
+        intent.putExtras(intent.extras ?: Bundle())
+
+        super.onResume()
+    }
+
     override fun startLoginFlow() {
         if (!presenceSDK.isLoggedIn) {
             navController.navigate(R.id.action_to_ticketing_flow)
@@ -78,5 +92,19 @@ class VenueNextFlowActivity : AppCompatActivity(), TicketingInterface, WalletInt
         else R.id.action_to_ticketing_flow
 
         navController.navigate(destination)
+    }
+
+    private fun handleBackPress() {
+        // Here you can perform any actions that you would normally perform when overriding
+        // onBackPressed in the Activity that hosts VenueNext content.
+        // Get the nav host fragment for this activity
+        val navHostFragment = supportFragmentManager.findFragmentById(R.id.fragment_main)!!
+        val count = navHostFragment.childFragmentManager.backStackEntryCount
+        if (count == 0) {
+            finish()
+        }
+        else {
+            navController.popBackStack()
+        }
     }
 }
