@@ -1,0 +1,26 @@
+{
+  "service_base_urls" : {
+    "notify" : "https://notify-server.venuenext.net/",
+    "venue" : "https://venue-server.venuenext.net/",
+    "payment" : "https://payment-server.venuenext.net/",
+    "stubs" : "https://stubs-server.venuenext.net/",
+    "stadium" : "https://stadium-server.venuenext.net/",
+    "loyalty" : "https://loyalty-server.venuenext.net/",
+    "user" : "https://user-server.venuenext.net/"
+  },
+  "organization_name" : "YOUR_ORG_NAME",
+  "venues" : [
+    {
+      "venue_display_name" : "YOUR_VENUE_NAME",
+      "venue_uuid" : "YOUR_VENUE_UUID"
+    }
+  ],
+  "wallet" : {
+    "wallet_modes": ["qrCode", "qrScanner", "virtualCurrencyToggle"],
+    "product_type_restrictions": ["food", "merchandise"],
+    "vc_bank_name" : "vn_bank",
+    "wallet_title" : "Vault",
+    "program_name" : "VIP Member",
+    "virtual_currency_name" : "Virtual Money"
+  }
+}

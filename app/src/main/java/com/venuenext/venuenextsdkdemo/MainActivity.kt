@@ -18,15 +18,15 @@ import com.venuenext.vncore.protocol.TicketingInterface
 import com.venuenext.vncore.protocol.WalletInterface
 import com.venuenext.vncoreui.LifecycleCoroutineScope
 import com.venuenext.vnlocalytics.localytics.LocalyticsAnalytics
-import com.venuenext.vnorder.stands.types.ProductType
+//import com.venuenext.vnorder.stands.types.ProductType
 import com.venuenext.vnorderui.VNOrderUI
 import com.venuenext.vnpayment.VNPayment
 import com.venuenext.vnpayment.braintree.ui.BraintreePaymentProcessableFragment
-import com.venuenext.vnwalletui.QrConfig
+//import com.venuenext.vnwalletui.QrConfig
 import com.venuenext.vnwalletui.VNWalletUI
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+//import kotlinx.coroutines.Dispatchers
+//import kotlinx.coroutines.launch
+//import kotlinx.coroutines.withContext
 
 private const val TAG = "MainActivity"
 
@@ -56,53 +56,81 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
         // Setting a reselected listener will disallow selection of the same tab
         // bottomNavigationView.setOnNavigationItemReselectedListener { /* Disallow reselection */ }
 
-        coroutineScope.launch(Dispatchers.IO) {
-            try {
-                val sdkKey = "YOUR_VN_SDK_KEY"
-                val sdkSecret = "YOUR_VN_SDK_SECRET"
+        // This is an example of how to initialize the SDK if you have reveived a JSON config file
+        //from VenueNext.
+        val sdkKey = "YOUR_VN_SDK_KEY"
+        val sdkSecret = "YOUR_VN_SDK_SECRET"
 
-                VenueNext.configureAnalytics(FirebaseAnalytics(this@MainActivity))
-                VenueNext.configureAnalytics(LocalyticsAnalytics(this@MainActivity, application!!))
-
-                VNPayment.configurePaymentProcessing(BraintreePaymentProcessableFragment(), true)
-
-                VenueNext.ticketingInterface = this@MainActivity
-                VenueNext.walletInterface = this@MainActivity
-
-                VenueNext.initialize(sdkKey, sdkSecret,this@MainActivity).await()
-
-                // Initialize top level module objects to handle deep links
-                VenueNext.registerDeepLinkable(VNOrderUI, VNWalletUI)
-
-                // List of product types that a user can purchase with virtual currency
-                // Does not need to be set if all are allowed because all are allowed by default
-                val virtualCurrencyProductTypes = listOf(
-                    ProductType.EXPERIENCE,
-                    ProductType.FOOD
-                )
-
-                // Call configure to set virtual currency toggle visibility in the wallet UI
-                VNWalletUI.configure(
-                    isVirtualCurrencyToggleVisible = true,
-                    qrConfig = QrConfig.VC_AND_SCANNER,
-                    actionBarTitle = getString(R.string.wallet_title),
-                    isVirtualCurrencyEnabled = virtualCurrencyProductTypes.isNotEmpty()
-                )
-
-                // Configure virtual currency enabled product types so we can determine at
-                // checkout whether or not to show VC toggle
-                VNOrderUI.configureVirtualCurrencyProductTypes(virtualCurrencyProductTypes)
-
-                withContext(Dispatchers.Main) {
-                    completeInitialize()
-                }
-
-            } catch (e: Exception) {
-                Log.e(TAG, "Initialization failed", e)
-                finish()
-            }
-
+        val configStream = resources.openRawResource(
+            resources.getIdentifier("vn_sdk_config", "raw", packageName)
+        )
+        var configString = ""
+        try {
+            configStream.bufferedReader().use { configString = it.readText() }
         }
+        catch (e: Exception) {
+            Log.e(TAG, "Error reading the VN SDK config file", e)
+        }
+
+        VenueNext.initialize(
+            sdkKey = sdkKey,
+            sdkSecret = sdkSecret,
+            context = this,
+            javaWebToken = null,
+            configJsonString = configString,
+            onSuccess = this::completeInitialize,
+            onError = this::completeInitializeAfterFailure
+        )
+
+        /* This is an example of initializing the SDK without a JSON config file.
+        This method of initialization is currently deprecated and will be removed
+        in a future release. */
+//        coroutineScope.launch(Dispatchers.IO) {
+//            try {
+//                val sdkKey = "YOUR_VN_SDK_KEY"
+//                val sdkSecret = "YOUR_VN_SDK_SECRET"
+//
+//                VenueNext.configureAnalytics(FirebaseAnalytics(this@MainActivity))
+//                VenueNext.configureAnalytics(LocalyticsAnalytics(this@MainActivity, application!!))
+//
+//                VNPayment.configurePaymentProcessing(BraintreePaymentProcessableFragment(), true)
+//
+//                VenueNext.ticketingInterface = this@MainActivity
+//                VenueNext.walletInterface = this@MainActivity
+//
+//                VenueNext.initialize(sdkKey, sdkSecret,this@MainActivity).await()
+//
+//                // Initialize top level module objects to handle deep links
+//                VenueNext.registerDeepLinkable(VNOrderUI, VNWalletUI)
+//
+//                // List of product types that a user can purchase with virtual currency
+//                // Does not need to be set if all are allowed because all are allowed by default
+//                val virtualCurrencyProductTypes = listOf(
+//                    ProductType.EXPERIENCE,
+//                    ProductType.FOOD
+//                )
+//
+//                // Call configure to set virtual currency toggle visibility in the wallet UI
+//                VNWalletUI.configure(
+//                    isVirtualCurrencyToggleVisible = true,
+//                    qrConfig = QrConfig.VC_AND_SCANNER,
+//                    actionBarTitle = getString(R.string.wallet_title),
+//                    isVirtualCurrencyEnabled = virtualCurrencyProductTypes.isNotEmpty()
+//                )
+//
+//                // Configure virtual currency enabled product types so we can determine at
+//                // checkout whether or not to show VC toggle
+//                VNOrderUI.configureVirtualCurrencyProductTypes(virtualCurrencyProductTypes)
+//
+//                withContext(Dispatchers.Main) {
+//                    completeInitialize()
+//                }
+//
+//            } catch (e: Exception) {
+//                Log.e(TAG, "Initialization failed", e)
+//                finish()
+//            }
+//        }
     }
 
     override fun onNavigationItemSelected(menuItem: MenuItem): Boolean {
@@ -162,10 +190,28 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
     }
 
     private fun completeInitialize() {
+
         registerFCM()
+        VNOrderUI.initialize()
+        VNWalletUI.initialize()
+        VNPayment.configurePaymentProcessing(BraintreePaymentProcessableFragment())
+
+        VenueNext.notificationTitle = "VN SDK Demo"
+        VenueNext.notificationSmallIcon = R.mipmap.ic_launcher
+        VenueNext.notificationLargeIcon = R.mipmap.ic_launcher
+
+        VenueNext.configureAnalytics(FirebaseAnalytics(this@MainActivity))
+        VenueNext.configureAnalytics(LocalyticsAnalytics(this@MainActivity, application!!))
 
         bottomNavigationView.visibility = View.VISIBLE
+        navigateAfterInitialization()
+    }
 
+    private fun completeInitializeAfterFailure(e: Throwable) {
+        Log.e(TAG, "SDK initialization failed!")
+    }
+
+    private fun navigateAfterInitialization() {
         try {
             navController.navigate(R.id.start_main)
         } catch (e: Exception) {
