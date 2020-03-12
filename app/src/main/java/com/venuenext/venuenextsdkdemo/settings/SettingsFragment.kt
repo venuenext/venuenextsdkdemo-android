@@ -73,8 +73,9 @@ class SettingsFragment : Fragment() {
                     "Order UUID"
                 ) {
                     VNOrderUI.showPurchasedExperienceReceipt(
-                        it,
-                        requireView().findNavController()
+                        requireView().findNavController(),
+                        it
+
                     )
                 }
             }
