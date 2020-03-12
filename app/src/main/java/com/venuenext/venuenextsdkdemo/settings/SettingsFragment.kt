@@ -2,22 +2,32 @@ package com.venuenext.venuenextsdkdemo.settings
 
 import android.graphics.Rect
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
+import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.annotation.StringRes
+import androidx.appcompat.app.AlertDialog
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
+import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
 import com.ticketmaster.presencesdk.PresenceSDK
 import com.venuenext.venuenextsdkdemo.R
 import com.venuenext.venuenextsdkdemo.databinding.FragmentSettingsBinding
+import com.venuenext.vnorderui.VNOrderUI
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+import kotlinx.coroutines.launch
 
 private const val SPACE_HEIGHT = 18
+private const val TAG = "SettingsFragment"
 
 class SettingsFragment : Fragment() {
     private val presenceSDK: PresenceSDK by lazy { PresenceSDK.getPresenceSDK(activity!!.application) }
@@ -46,6 +56,31 @@ class SettingsFragment : Fragment() {
     }
 
     private fun onItemClicked(@StringRes id: Int) {
+
+        when(id) {
+            R.string.settings_show_awarded_or_transferred_experience_receipt -> {
+                showTextInputDialogForUUIDCapture(
+                    "User Item UUID"
+                ) {
+                    VNOrderUI.showAwardedOrTransferredExperience(
+                        requireView().findNavController(),
+                        it
+                    )
+                }
+            }
+            R.string.settings_show_purchased_experience_receipt -> {
+                showTextInputDialogForUUIDCapture(
+                    "Order UUID"
+                ) {
+                    VNOrderUI.showPurchasedExperienceReceipt(
+                        requireView().findNavController(),
+                        it
+
+                    )
+                }
+            }
+        }
+
         val navId = when (id) {
             // Revenue Center Flows
             R.string.settings_display_all_rvc -> R.id.action_all_stands_flow
@@ -115,6 +150,34 @@ class SettingsFragment : Fragment() {
                 )
             )
         }
+    }
+
+    private fun showTextInputDialogForUUIDCapture(title: String, action: (String) -> Unit) {
+        val layout = LinearLayout(context).apply { orientation = LinearLayout.VERTICAL }
+        val editText = EditText(context)
+        layout.addView(editText)
+        AlertDialog.Builder(context!!)
+            .setTitle(title)
+            .setView(layout)
+            .setPositiveButton(R.string.ok) { d, _ ->
+                try {
+                    action(editText.text.toString())
+                } catch (e: Exception) {
+                    val error = e.message ?: "Unknown Error"
+                    showMessage(error)
+                }
+                d.dismiss()
+            }
+            .show()
+    }
+
+    private fun showMessage(msg: String) {
+        Log.i(TAG, msg)
+        AlertDialog.Builder(context!!)
+            .setTitle("Result")
+            .setMessage(msg)
+            .setPositiveButton(R.string.ok) { _, _ -> }
+            .show()
     }
 
     class MarginItemDecoration(private val spaceHeight: Int) : RecyclerView.ItemDecoration() {
