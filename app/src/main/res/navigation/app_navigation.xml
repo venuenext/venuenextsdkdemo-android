@@ -19,6 +19,8 @@
     <include app:graph="@navigation/to_experience_detail_flow"/>
     <include app:graph="@navigation/my_orders_flow"/>
     <include app:graph="@navigation/wallet_flow"/>
+    <include app:graph="@navigation/to_direct_receipt_flow"/>
+    <include app:graph="@navigation/to_awarded_transferred_experience_flow"/>
 
     <!--Flow Actions-->
     <!--Note: String arguments cannot be references -->
@@ -80,6 +82,9 @@
         <argument android:name="showBackButton" app:argType="boolean" android:defaultValue="false"/>
         <argument android:name="vnActionBarTitle" app:argType="string" android:defaultValue="Wallet"/>
     </action>
+
+    <action android:id="@id/action_to_direct_receipt_flow" app:destination="@id/action_to_direct_receipt_flow"/>
+    <action android:id="@id/action_to_awarded_transferred_experience_flow" app:destination="@id/to_awarded_transferred_experience_flow"/>
 
     <!-- This is the entry point into the app's navigation graph. Here we define an action that
          launches the VN flow and pop this placeholder fragment so it isn't shown again.

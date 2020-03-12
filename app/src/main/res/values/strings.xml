@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">VenueNext SDK Demo</string>
-    <string name="app_version">0.9.0</string>
+    <string name="app_version">0.10.0</string>
 
     <!-- Navigation Titles -->
     <string name="nav_food_and_bev_rvc_title">Menus</string>
@@ -31,6 +31,8 @@
     <string name="settings_launch_to_food_menu">Launch to Food Menu</string>
     <string name="settings_launch_to_experience_menu">Launch to Experience Menu</string>
     <string name="settings_launch_to_experience_detail">Launch to Experience Detail</string>
+    <string name="settings_show_purchased_experience_receipt">Show Purchased Experience (Receipt)</string>
+    <string name="settings_show_awarded_or_transferred_experience_receipt">Show Awarded/Xfered Experience (Card)</string>
 
     <!-- Demo app settings -->
     <string name="settings_section_demo">Demo App</string>
