@@ -12,6 +12,7 @@ import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.iid.FirebaseInstanceId
 import com.ticketmaster.presencesdk.PresenceSDK
+import com.venuenext.venuenextsdkdemo.analytics.VNAnalyticsInterface
 import com.venuenext.vnanalytics.firebase.FirebaseAnalytics
 import com.venuenext.vncore.VenueNext
 import com.venuenext.vncore.protocol.TicketingInterface
@@ -56,8 +57,8 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
         // Setting a reselected listener will disallow selection of the same tab
         // bottomNavigationView.setOnNavigationItemReselectedListener { /* Disallow reselection */ }
 
-        // This is an example of how to initialize the SDK if you have reveived a JSON config file
-        //from VenueNext.
+        // This is an example of how to initialize the SDK if you have received a JSON config file
+        // from VenueNext.
         val sdkKey = "YOUR_VN_SDK_KEY"
         val sdkSecret = "YOUR_VN_SDK_SECRET"
 
@@ -200,8 +201,11 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
         VenueNext.notificationSmallIcon = R.mipmap.ic_launcher
         VenueNext.notificationLargeIcon = R.mipmap.ic_launcher
 
-        VenueNext.configureAnalytics(FirebaseAnalytics(this@MainActivity))
-        VenueNext.configureAnalytics(LocalyticsAnalytics(this@MainActivity, application!!))
+        // Note: We removed calls to add Firebase and Localytics analytics implementations
+        // You can add your own analytics implementation to receive events from the VenueNext SDK
+        // as shown below.
+        val analytics = VNAnalyticsInterface(applicationContext)
+        VenueNext.configureAnalytics(analytics)
 
         bottomNavigationView.visibility = View.VISIBLE
         navigateAfterInitialization()
