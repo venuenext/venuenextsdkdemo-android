@@ -77,7 +77,7 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
             sdkKey = sdkKey,
             sdkSecret = sdkSecret,
             context = this,
-            javaWebToken = null,
+            jwt = null,
             configJsonString = configString,
             onSuccess = this::completeInitialize,
             onError = this::completeInitializeAfterFailure
