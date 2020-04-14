@@ -21,6 +21,7 @@ import com.google.android.material.snackbar.Snackbar
 import com.ticketmaster.presencesdk.PresenceSDK
 import com.venuenext.venuenextsdkdemo.R
 import com.venuenext.venuenextsdkdemo.databinding.FragmentSettingsBinding
+import com.venuenext.vncore.VenueNext
 import com.venuenext.vnorderui.VNOrderUI
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -77,6 +78,11 @@ class SettingsFragment : Fragment() {
                         it
 
                     )
+                }
+            }
+            R.string.new_jwt_login -> {
+                showTextInputDialogForUUIDCapture(getString(R.string.enter_jwt)) {
+                    initWithJWT(it)
                 }
             }
         }
@@ -182,6 +188,42 @@ class SettingsFragment : Fragment() {
             .setMessage(msg)
             .setPositiveButton(R.string.ok) { _, _ -> }
             .show()
+    }
+
+    private fun initWithJWT(jwt: String) {
+        val token = if (jwt.isNotBlank()) jwt else null
+
+        val sdkKey = "YOUR_VN_SDK_KEY"
+        val sdkSecret = "YOUR_VN_SDK_SECRET"
+
+        val configStream = resources.openRawResource(
+            resources.getIdentifier("vn_sdk_config", "raw", activity?.packageName)
+        )
+        var configString = ""
+        try {
+            configStream.bufferedReader().use { configString = it.readText() }
+        }
+        catch (e: Exception) {
+            Log.e(TAG, "Error reading the VN SDK config file", e)
+        }
+
+        VenueNext.initialize(
+            sdkKey = sdkKey,
+            sdkSecret = sdkSecret,
+            context = requireContext(),
+            jwt = token,
+            configJsonString = configString,
+            onSuccess = this::completeInitialize,
+            onError = this::completeInitializeAfterFailure
+        )
+    }
+
+    private fun completeInitialize() {
+        Snackbar.make(requireView(), getString(R.string.jwt_success), Snackbar.LENGTH_LONG).show()
+    }
+
+    private fun completeInitializeAfterFailure(e: Throwable) {
+        Snackbar.make(requireView(), getString(R.string.jwt_failure), Snackbar.LENGTH_LONG).show()
     }
 
     class MarginItemDecoration(private val spaceHeight: Int) : RecyclerView.ItemDecoration() {

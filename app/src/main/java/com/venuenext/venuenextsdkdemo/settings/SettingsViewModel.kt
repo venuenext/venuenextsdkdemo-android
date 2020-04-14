@@ -29,7 +29,10 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
 
             val demoSection = SettingsSection(
                 getString(R.string.settings_section_demo),
-                listOf(R.string.settings_logout_tm)
+                listOf(
+                    R.string.settings_logout_tm,
+                    R.string.new_jwt_login
+                )
             )
             
             val directLaunchSection = SettingsSection(

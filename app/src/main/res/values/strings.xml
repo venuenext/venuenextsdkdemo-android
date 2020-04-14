@@ -41,6 +41,11 @@
     <string name="tm_not_logged_in">Not logged in</string>
     <string name="tm_logging_out">Logging out of Ticketmaster</string>
     <string name="settings_launch_tm">Launch Ticketmaster</string>
+    <string name="new_jwt_login">New JWT Login</string>
+
+    <string name="enter_jwt">Enter the JSON Web Token</string>
+    <string name="jwt_success">Successfully logged in JWT user.</string>
+    <string name="jwt_failure">Failed to init SDK with JWT user.</string>
 
     <!-- Ticketmaster -->
     <string name="logout">Logout</string>
