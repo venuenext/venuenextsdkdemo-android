@@ -63,6 +63,7 @@
             app:popUpTo="@id/mainFragment" app:popUpToInclusive="true">
         <argument android:name="showBackButton" app:argType="boolean" android:defaultValue="true"/>
         <argument android:name="toMenuId" app:argType="string" app:nullable="true" android:defaultValue="@null"/>
+        <argument android:name="defaultEventId" app:argType="string" app:nullable="true" android:defaultValue="@null"/>
     </action>
 
     <!-- Show Experience Details -->
