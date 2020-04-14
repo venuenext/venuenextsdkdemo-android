@@ -130,6 +130,10 @@ class SettingsFragment : Fragment() {
             R.string.settings_launch_to_experience_menu -> bundleOf(
                 "toMenuId" to "<YourExperienceMenuUUID>"
             )
+            R.string.settings_launch_to_experience_menu_event_selected -> bundleOf(
+                "toMenuId" to "<YourExperienceMenuUUID>",
+                "defaultEventId" to "<YourExperienceEventUUID>"
+            )
             R.string.settings_launch_to_experience_detail -> bundleOf(
                 "menu_id" to "<YourExperienceMenuUUID>",
                 "event_id" to "<YourEventUUID>",
