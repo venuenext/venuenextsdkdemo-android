@@ -37,6 +37,7 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
                 listOf(
                     R.string.settings_launch_to_food_menu,
                     R.string.settings_launch_to_experience_menu,
+                    R.string.settings_launch_to_experience_menu_event_selected,
                     R.string.settings_launch_to_experience_detail,
                     R.string.settings_show_purchased_experience_receipt,
                     R.string.settings_show_awarded_or_transferred_experience_receipt

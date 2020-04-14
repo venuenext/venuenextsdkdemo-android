@@ -117,7 +117,7 @@ class SettingsFragment : Fragment() {
 
             // Direct Launch Flows
             R.string.settings_launch_to_food_menu -> R.id.action_start_to_stand_menu
-            R.string.settings_launch_to_experience_menu -> R.id.action_start_to_experience_menu
+            R.string.settings_launch_to_experience_menu, R.string.settings_launch_to_experience_menu_event_selected -> R.id.action_start_to_experience_menu
             R.string.settings_launch_to_experience_detail -> R.id.action_start_to_experience_detail
             else -> null
         }
