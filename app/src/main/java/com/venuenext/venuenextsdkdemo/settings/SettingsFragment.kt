@@ -6,9 +6,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.EditText
-import android.widget.LinearLayout
-import android.widget.Toast
+import android.widget.*
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AlertDialog
 import androidx.core.os.bundleOf
@@ -24,8 +22,8 @@ import com.venuenext.venuenextsdkdemo.databinding.FragmentSettingsBinding
 import com.venuenext.vncore.VenueNext
 import com.venuenext.vnorderui.VNOrderUI
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 private const val SPACE_HEIGHT = 18
 private const val TAG = "SettingsFragment"
@@ -80,9 +78,15 @@ class SettingsFragment : Fragment() {
                     )
                 }
             }
-            R.string.new_jwt_login -> {
-                showTextInputDialogForUUIDCapture(getString(R.string.enter_jwt)) {
-                    initWithJWT(it)
+            R.string.new_jwt_or_org -> {
+                showDropdownSelectionDialogWithThreeEditTexts(
+                    getString(R.string.choose_org),
+                    resources.getStringArray(R.array.orgs_array),
+                    getString(R.string.enter_jwt),
+                    getString(R.string.enter_key),
+                    getString(R.string.enter_secret)
+                ) { orgName, jwt, sdkKey, sdkSecret ->
+                    reInitSDK(orgName, jwt, sdkKey, sdkSecret)
                 }
             }
         }
@@ -181,6 +185,53 @@ class SettingsFragment : Fragment() {
             .show()
     }
 
+    private fun showDropdownSelectionDialogWithThreeEditTexts(
+        title: String,
+        options: Array<String>,
+        hint1: String,
+        hint2: String,
+        hint3: String,
+        action: (dropDownSelection: String, response1: String, response2: String, response3: String) -> Unit
+    ) {
+        val layout = LinearLayout(requireContext()).apply { orientation = LinearLayout.VERTICAL }
+        val spinner = Spinner(requireContext())
+        val adapter = ArrayAdapter<String>(requireContext(), android.R.layout.simple_list_item_1, options)
+        spinner.adapter = adapter
+
+        val editText1 = EditText(requireContext())
+        val editText2 = EditText(requireContext())
+        val editText3 = EditText(requireContext())
+
+        editText1.hint = hint1
+        editText2.hint = hint2
+        editText3.hint = hint3
+
+        layout.addView(spinner)
+        layout.addView(editText1)
+        layout.addView(editText2)
+        layout.addView(editText3)
+
+        AlertDialog.Builder(requireContext())
+            .setTitle(title)
+            .setView(layout)
+            .setPositiveButton(R.string.ok) { d, _ ->
+                try {
+                    action(
+                        (spinner.selectedItem as? String) ?: "",
+                        editText1.text.toString(),
+                        editText2.text.toString(),
+                        editText3.text.toString()
+                    )
+                }
+                catch (e: Exception) {
+                    val error = e.message ?: "Unknown Error"
+                    showMessage(error)
+                }
+                d.dismiss()
+            }
+            .show()
+    }
+
     private fun showMessage(msg: String) {
         Log.i(TAG, msg)
         AlertDialog.Builder(context!!)
@@ -190,14 +241,12 @@ class SettingsFragment : Fragment() {
             .show()
     }
 
-    private fun initWithJWT(jwt: String) {
+    private fun reInitSDK(orgName: String, jwt: String, key: String, secret: String) {
         val token = if (jwt.isNotBlank()) jwt else null
-
-        val sdkKey = "YOUR_VN_SDK_KEY"
-        val sdkSecret = "YOUR_VN_SDK_SECRET"
+        val configFileName = getConfigFileName(orgName)
 
         val configStream = resources.openRawResource(
-            resources.getIdentifier("vn_sdk_config", "raw", activity?.packageName)
+            resources.getIdentifier(configFileName, "raw", activity?.packageName)
         )
         var configString = ""
         try {
@@ -208,8 +257,8 @@ class SettingsFragment : Fragment() {
         }
 
         VenueNext.initialize(
-            sdkKey = sdkKey,
-            sdkSecret = sdkSecret,
+            sdkKey = key,
+            sdkSecret = secret,
             context = requireContext(),
             jwt = token,
             configJsonString = configString,
@@ -219,11 +268,17 @@ class SettingsFragment : Fragment() {
     }
 
     private fun completeInitialize() {
-        Snackbar.make(requireView(), getString(R.string.jwt_success), Snackbar.LENGTH_LONG).show()
+        Snackbar.make(requireView(), getString(R.string.test_init_success), Snackbar.LENGTH_LONG).show()
     }
 
     private fun completeInitializeAfterFailure(e: Throwable) {
-        Snackbar.make(requireView(), getString(R.string.jwt_failure), Snackbar.LENGTH_LONG).show()
+        Snackbar.make(requireView(), getString(R.string.test_init_failure), Snackbar.LENGTH_LONG).show()
+    }
+
+    private fun getConfigFileName(orgName: String): String = when (orgName) {
+        requireContext().getString(R.string.org_1) -> requireContext().getString(R.string.config_file_1)
+        requireContext().getString(R.string.org_2) -> requireContext().getString(R.string.config_file_2)
+        else -> ""
     }
 
     class MarginItemDecoration(private val spaceHeight: Int) : RecyclerView.ItemDecoration() {

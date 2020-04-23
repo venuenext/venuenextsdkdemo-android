@@ -31,7 +31,7 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
                 getString(R.string.settings_section_demo),
                 listOf(
                     R.string.settings_logout_tm,
-                    R.string.new_jwt_login
+                    R.string.new_jwt_or_org
                 )
             )
             

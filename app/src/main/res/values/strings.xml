@@ -1,6 +1,9 @@
 <resources>
     <string name="app_name">VenueNext SDK Demo</string>
-    <string name="app_version">0.10.2</string>
+    <string name="app_version">0.10.3</string>
+
+    <string name="config_file_1">vn_sdk_config</string>
+    <string name="config_file_2">vn_sdk_config_2</string>
 
     <!-- Navigation Titles -->
     <string name="nav_food_and_bev_rvc_title">Menus</string>
@@ -41,11 +44,20 @@
     <string name="tm_not_logged_in">Not logged in</string>
     <string name="tm_logging_out">Logging out of Ticketmaster</string>
     <string name="settings_launch_tm">Launch Ticketmaster</string>
-    <string name="new_jwt_login">New JWT Login</string>
+    <string name="new_jwt_or_org">Re Init SDK</string>
 
     <string name="enter_jwt">Enter the JSON Web Token</string>
-    <string name="jwt_success">Successfully logged in JWT user.</string>
-    <string name="jwt_failure">Failed to init SDK with JWT user.</string>
+    <string name="enter_key">Enter the Org\'s SDK Key</string>
+    <string name="enter_secret">Enter the Org\'s SDK Secret</string>
+    <string name="test_init_success">Successfully initialized SDK.</string>
+    <string name="test_init_failure">Failed to initialize SDK.</string>
+    <string name="choose_org">Please select an organization</string>
+    <string name="org_1">Example Org 1</string>
+    <string name="org_2">Example Org 2</string>
+    <string-array name="orgs_array">
+        <item>@string/org_1</item>
+        <item>@string/org_2</item>
+    </string-array>
 
     <!-- Ticketmaster -->
     <string name="logout">Logout</string>
