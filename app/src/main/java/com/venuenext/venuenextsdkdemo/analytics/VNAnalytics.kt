@@ -65,7 +65,8 @@ class VNAnalyticsInterface(context: Context): AnalyticsInterface {
     /**
      * Handle intent routing for analytic push notifications (inbox, messaging, etc.)
      *
-     * @param application the application Object.
+     * @param activity the Activity object.
+     * @param intent the Intent object.
      */
     override fun handlePushNotificationIntent(activity: Activity, intent: Intent) {
 
@@ -100,7 +101,8 @@ class VNAnalyticsInterface(context: Context): AnalyticsInterface {
      * @param attributes the bundle object.
      */
     override fun trackEvent(eventName: String, attributes: Bundle) {
-
+        // Register here to get events
+        // All Post Purchase analytics now registered here
     }
 
     /**
@@ -109,7 +111,7 @@ class VNAnalyticsInterface(context: Context): AnalyticsInterface {
      * @param eventType the event type.
      * @param attributes the bundle object.
      */
-    override fun trackEvent(event: Event, attributes: Bundle) {
+    override fun trackEvent(eventType: Event, attributes: Bundle) {
         // Register here to get events
     }
 
@@ -147,7 +149,7 @@ class VNAnalyticsInterface(context: Context): AnalyticsInterface {
         product.putString(Param.ITEM_NAME.toString(), itemName)
         product.putString(Param.ITEM_CATEGORY.toString(), itemCategory)
         product.putString(Param.ITEM_VARIANT.toString(), variant)
-        product.putDouble(Param.PRICE.toString(), price)
+        product.putDouble(Param.ITEM_PRICE.toString(), price)
         product.putString(Param.CURRENCY.toString(), "USD")
 
         val ecommerceBundle = Bundle()
@@ -172,7 +174,7 @@ class VNAnalyticsInterface(context: Context): AnalyticsInterface {
         product.putString(Param.ITEM_NAME.toString(), itemName)
         product.putString(Param.ITEM_CATEGORY.toString(), itemCategory)
         product.putString(Param.ITEM_VARIANT.toString(), variant)
-        product.putDouble(Param.PRICE.toString(), price)
+        product.putDouble(Param.ITEM_PRICE.toString(), price)
         product.putString(Param.CURRENCY.toString(), "USD")
         product.putLong(Param.QUANTITY.toString(), quantity)
 
@@ -198,7 +200,7 @@ class VNAnalyticsInterface(context: Context): AnalyticsInterface {
         product.putString(Param.ITEM_NAME.toString(), itemName)
         product.putString(Param.ITEM_CATEGORY.toString(), itemCategory)
         product.putString(Param.ITEM_VARIANT.toString(), variant)
-        product.putDouble(Param.PRICE.toString(), price)
+        product.putDouble(Param.ITEM_PRICE.toString(), price)
         product.putString(Param.CURRENCY.toString(), "USD")
         product.putLong(Param.QUANTITY.toString(), quantity)
 
@@ -250,6 +252,7 @@ class VNAnalyticsInterface(context: Context): AnalyticsInterface {
 
     /**
      * Track purchase via analytics framework.
+     * This method is being deprecated and replaced with `track(eventType: Event, metadata: Bundle)`.
      *
      * @param items the items Bundle list.
      * @param transactionId the variant string.
@@ -270,5 +273,9 @@ class VNAnalyticsInterface(context: Context): AnalyticsInterface {
         ecommerceBundle.putString(Param.CURRENCY.toString(), "USD")
 
         trackEvent(Event.ECOMMERCE_PURCHASE, ecommerceBundle)
+    }
+
+    override fun track(eventType: Event, metadata: Bundle) {
+        trackEvent(eventType.toString(), metadata)
     }
 }
