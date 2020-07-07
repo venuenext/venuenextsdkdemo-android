@@ -1,8 +1,8 @@
 # VenueNext Android SDK integration
 
-This is a sample project using the VenueNext Android SDK. 
+This is a sample project using the VenueNext Android SDK.
 
-The SDK and demo app heavily rely on single-activity navigation principles. Future updates to the demo app will provide examples for this use case in a separate activity from the Settings screen. 
+The SDK and demo app heavily rely on single-activity navigation principles. Future updates to the demo app will provide examples for this use case in a separate activity from the Settings screen.
 
 For more information use this link:
 
@@ -66,6 +66,25 @@ If you are **not** supporting multiple organizations within one app, you can ign
 For the most part, if you have only been provided with one configuration file, you are not supporting multiple organizations.
 
 # Optional - Additional Set Up
+
+## Ticketmaster
+If you are also integrating with Ticketmaster, you can easily test Ticketmaster interactions by updating the `consumerKey` and `displayName` values in the `TicketmasterConfigListener.kt` file:
+```kotlin
+fun configurePresenceSDK() {
+  presenceSDK.apply {
+    registerConfigListener(this@TicketmasterConfigListener)
+    setConfig(
+        "YOUR_TM_SDK_KEY",
+        "YOUR_TM_DISPLAY_NAME",
+        true
+    )
+
+    // Configure your branding color for the SDK
+    setBrandingColor(R.color.colorAccent)
+  }
+}
+```
+
 
 ## Localytics
 If you are using Localytics, you can update your Localytics scheme in the `AndroidManifest.xml` file.
