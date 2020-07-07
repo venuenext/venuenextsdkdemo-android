@@ -18,8 +18,8 @@ class TicketmasterConfigListener(
         presenceSDK.apply {
             registerConfigListener(this@TicketmasterConfigListener)
             setConfig(
-                "TM SDK_KEY",
-                "TM Display Name",
+                "YOUR_TM_SDK_KEY",
+                "YOUR_TM_DISPLAY_NAME",
                 true
             )
 
