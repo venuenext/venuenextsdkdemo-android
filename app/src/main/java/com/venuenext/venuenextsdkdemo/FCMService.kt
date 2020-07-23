@@ -5,14 +5,13 @@ import com.google.firebase.messaging.RemoteMessage
 import com.venuenext.vncore.VenueNext
 
 class FCMService : FirebaseMessagingService() {
-
-    override fun onNewToken(s: String?) {
-        super.onNewToken(s)
+    override fun onNewToken(p0: String) {
+        super.onNewToken(p0)
     }
 
-    override fun onMessageReceived(remoteMessage: RemoteMessage?) {
-        super.onMessageReceived(remoteMessage)
+    override fun onMessageReceived(p0: RemoteMessage) {
+        super.onMessageReceived(p0)
 
-        VenueNext.handleRemoteMessage(this, remoteMessage)
+        VenueNext.handleRemoteMessage(this, p0)
     }
 }
